@@ -1,0 +1,18 @@
+kind: "BuildConfig"
+apiVersion: "v1"
+metadata:
+  name: "jenkins-slave-appdev"
+spec:
+  source:
+    dockerfile: |
+      FROM docker.io/openshift/jenkins-slave-maven-centos7:v3.9
+      USER root
+      RUN yum -y install skopeo apb && yum clean all
+      USER 1001
+    type: Dockerfile
+  strategy:
+    DockerStrategy:
+      from:
+        kind: "ImageStreamTag"
+        name: "nexus-registry-80ff-nexus.apps.na39.openshift.opentlc.comm/80ff-jenkins/jenkins-slave-maven-appdev:v3.9"
+

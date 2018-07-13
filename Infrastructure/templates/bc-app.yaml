@@ -1,0 +1,49 @@
+apiVersion: v1
+items:
+- kind: "BuildConfig"
+  apiVersion: "v1"
+  metadata:
+    labels:
+      name: "mlbparks-pipeline"
+    name: "mlbparks-pipeline"
+  spec:
+    source:
+      type: "Git"
+      git: 
+        uri: "https://github.com/hisasue/ocp_advdev.git"
+    strategy:
+      type: "JenkinsPipeline"
+      jenkinsPipelineStrategy:
+        jenkinsfilePath: "MLBParks/Jenkinsfile"
+- kind: "BuildConfig"
+  apiVersion: "v1"
+  metadata:
+    labels:
+      name: "nationalparks-pipeline"
+    name: "nationalparks-pipeline"
+  spec:
+    source:
+      type: "Git"
+      git: 
+        uri: "https://github.com/hisasue/ocp_advdev.git"
+    strategy:
+      type: "JenkinsPipeline"
+      jenkinsPipelineStrategy:
+        jenkinsfilePath: "Nationalparks/Jenkinsfile"
+- kind: "BuildConfig"
+  apiVersion: "v1"
+  metadata:
+    labels:
+      name: "parksmap-pipeline"
+    name: "parksmap-pipeline"
+  spec:
+    source:
+      type: "Git"
+      git: 
+        uri: "https://github.com/hisasue/ocp_advdev.git"
+    strategy:
+      type: "JenkinsPipeline"
+      jenkinsPipelineStrategy:
+        jenkinsfilePath: "ParksMap/Jenkinsfile"
+kind: List
+metadata: []

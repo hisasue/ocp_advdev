@@ -11,8 +11,9 @@ spec:
       USER 1001
     type: Dockerfile
   strategy:
-    DockerStrategy:
+    dockerStrategy:
       from:
         kind: "ImageStreamTag"
-        name: "nexus-registry-80ff-nexus.apps.na39.openshift.opentlc.comm/80ff-jenkins/jenkins-slave-maven-appdev:v3.9"
+        name: "jenkins-slave-maven-appdev:v3.9"
+        #name: "nexus-registry-80ff-nexus.apps.na39.openshift.opentlc.comm/80ff-jenkins/jenkins-slave-maven-appdev:v3.9"
 

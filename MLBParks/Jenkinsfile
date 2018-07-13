@@ -15,11 +15,36 @@ podTemplate(
   node('skopeo-pod') {
     echo "GUID: ${GUID}"
     echo "CLUSTER: ${CLUSTER}"
+    def mvnCmd = "mvn -s ./nexus_openshift_settings.xml"
+
 
     // Your Pipeline Code goes here. Make sure to use the ${GUID} and ${CLUSTER} parameters where appropriate
     // You need to build the application in directory `MLBParks`.
     // Also copy "../nexus_settings.xml" to your build directory
     // and replace 'GUID' in the file with your ${GUID} to point to >your< Nexus instance
+    def groupId    = getGroupIdFromPom("pom.xml")
+    def artifactId = getArtifactIdFromPom("pom.xml")
+    def version    = getVersionFromPom("pom.xml")
+    // Set the tag for the development image: version + build number
+    def devTag  = "${version}-${BUILD_NUMBER}"
+    // Set the tag for the production image: version
+    def prodTag = "${version}"
+
+    stage('Build war') {
+      echo "Building version ${devTag}"
+      sh "${mvnCmd} clean package -DskipTests"
+    }
+
+    stage('Unit Tests') {
+      echo "Running Unit Tests"
+      sh "${mvnCmd} test"
+    }
+
+    stage('Code Analysis') {
+      echo "Running Code Analysis"
+      sh "${mvnCmd} sonar:sonar -Dsonar.host.url=http://sonarqube-thisasue-sonarqube.apps.tok.example.opentlc.com/ -Dsonar.projectName=${JOB_BASE_NAME}-${devTag}"
+    }
+
  
   }
 }

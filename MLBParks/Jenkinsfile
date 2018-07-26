@@ -1,4 +1,8 @@
 // Jenkinsfile for MLBParks
+def GUID=${env.GUID}
+def CLUSTER=${env.CLUSTER}
+def REPO=${env.REPO}
+
 podTemplate(
   label: "skopeo-pod",
   cloud: "openshift",

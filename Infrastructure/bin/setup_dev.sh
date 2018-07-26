@@ -11,8 +11,6 @@ echo "Setting up Parks Development Environment in project ${GUID}-parks-dev"
 
 # Code to set up the parks development project.
 
-# To be Implemented by Student
-oc policy add-role-to-user edit system:serviceaccount:${GUID}-jenkins:jenkins -n ${GUID}-parks-dev
 echo 'kind: Service
 apiVersion: v1
 metadata:
@@ -99,7 +97,7 @@ spec:
             storage: "4Gi"' | oc create -f - -n ${GUID}-parks-dev
 
 # Set up MLBParks Dev Project
-oc policy add-role-to-user edit system:serviceaccount:${GUID}-jenkins:jenkins -n ${GUID}-parks-dev
+oc policy add-role-to-user admin system:serviceaccount:${GUID}-jenkins:jenkins -n ${GUID}-parks-dev
 oc policy add-role-to-user admin system:serviceaccount:gpte-jenkins:jenkins -n ${GUID}-parks-dev
 
 # Set up MLBParks Dev Application

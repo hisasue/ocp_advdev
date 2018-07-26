@@ -1,16 +1,13 @@
 // Jenkinsfile for MLBParks
 
 podTemplate(
-  def GUID=${env.GUID}
-  def CLUSTER=${env.CLUSTER}
-  def REPO=${env.REPO}
   label: "skopeo-pod",
   cloud: "openshift",
   inheritFrom: "maven",
   containers: [
     containerTemplate(
       name: "jnlp",
-      image: "docker-registry.default.svc:5000/${GUID}-jenkins/jenkins-slave-appdev",
+      image: "docker-registry.default.svc:5000/${env.GUID}-jenkins/jenkins-slave-appdev",
       resourceRequestMemory: "1Gi",
       resourceLimitMemory: "2Gi"
     )

@@ -1,4 +1,7 @@
 // Jenkinsfile for MLBParks
+def GUID="${env.GUID}"
+def CLUSTER="${env.CLUSTER}"
+def REPO="${env.REPO}"
 
 podTemplate(
   label: "skopeo-pod",
@@ -7,16 +10,13 @@ podTemplate(
   containers: [
     containerTemplate(
       name: "jnlp",
-      image: "docker-registry.default.svc:5000/${env.GUID}-jenkins/jenkins-slave-appdev",
+      image: "docker-registry.default.svc:5000/${GUID}-jenkins/jenkins-slave-appdev",
       resourceRequestMemory: "1Gi",
       resourceLimitMemory: "2Gi"
     )
   ]
 ) {
   node('skopeo-pod') {
-    def GUID=${env.GUID}
-    def CLUSTER=${env.CLUSTER}
-    def REPO=${env.REPO}
     echo "GUID: ${GUID}"
     echo "CLUSTER: ${CLUSTER}"
     def mvnCmd = "mvn -s ./nexus_openshift_settings.xml"

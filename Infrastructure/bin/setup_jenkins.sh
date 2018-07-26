@@ -29,8 +29,9 @@ echo "Setting up Jenkins in project ${GUID}-jenkins from Git Repo ${REPO} for Cl
 # To be Implemented by Student
 DIR=$(dirname $0)
 oc project ${GUID}-jenkins
-oc new-app jenkins-persistent --param ENABLE_OAUTH=true --param MEMORY_LIMIT=2Gi --param VOLUME_CAPACITY=4Gi -n ${GUID}-jenkins
-oc set env GUID=${GUID} REPO=${REPO} CLUSTER=${CLUSTER}
+#oc new-app jenkins-persistent --param ENABLE_OAUTH=true --param MEMORY_LIMIT=2Gi --param VOLUME_CAPACITY=4Gi -n ${GUID}-jenkins
+#oc new-app jenkins-persistent --param ENABLE_OAUTH=true --param MEMORY_REQUEST=2Gi --param CPU_REQUEST=1 --param VOLUME_CAPACITY=4Gi -n ${GUID}-jenkins
+oc new-app jenkins-persistent --param ENABLE_OAUTH=true --param MEMORY_REQUEST=2Gi  --param VOLUME_CAPACITY=4Gi -n ${GUID}-jenkins -e GUID=${GUID} -e REPO=${REPO} -e CLUSTER=${CLUSTER}
 #cd $DIR/../templates/jenkins-slave-appdev/
 #docker build . -t docker-registry-default.apps.na39.openshift.opentlc.com/${GUID}-jenkins/jenkins-slave-maven-appdev:v3.9
 #docker login -u wkulhane-redhat.com -p $(oc whoami -t) docker-registry-default.apps.na39.openshift.opentlc.com

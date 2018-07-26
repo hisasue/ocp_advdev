@@ -1,9 +1,9 @@
 // Jenkinsfile for MLBParks
-def GUID=${env.GUID}
-def CLUSTER=${env.CLUSTER}
-def REPO=${env.REPO}
 
 podTemplate(
+  def GUID=${env.GUID}
+  def CLUSTER=${env.CLUSTER}
+  def REPO=${env.REPO}
   label: "skopeo-pod",
   cloud: "openshift",
   inheritFrom: "maven",
@@ -17,6 +17,9 @@ podTemplate(
   ]
 ) {
   node('skopeo-pod') {
+    def GUID=${env.GUID}
+    def CLUSTER=${env.CLUSTER}
+    def REPO=${env.REPO}
     echo "GUID: ${GUID}"
     echo "CLUSTER: ${CLUSTER}"
     def mvnCmd = "mvn -s ./nexus_openshift_settings.xml"

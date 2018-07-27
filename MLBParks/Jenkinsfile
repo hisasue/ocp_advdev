@@ -51,10 +51,10 @@ podTemplate(
       sh "${mvnCmd} test"
     }
 
-    stage('Code Analysis') {
-      echo "Running Code Analysis"
-      sh "${mvnCmd} sonar:sonar -Dsonar.host.url=http://sonarqube-${GUID}-sonarqube.apps.${CLUSTER}/ -Dsonar.projectName=${JOB_BASE_NAME}-${devTag}"
-    }
+    //stage('Code Analysis') {
+    //  echo "Running Code Analysis"
+    //  sh "${mvnCmd} sonar:sonar -Dsonar.host.url=http://sonarqube-${GUID}-sonarqube.apps.${CLUSTER}/ -Dsonar.projectName=${JOB_BASE_NAME}-${devTag}"
+    //}
 
     // Publish the built war file to Nexus
     stage('Publish to Nexus') {
@@ -65,10 +65,6 @@ podTemplate(
     // Build the OpenShift Image in OpenShift and tag it.
     stage('Build and Tag OpenShift Image') {
       echo "Building OpenShift container image tasks:${devTag}"
-       // Start Binary Build in OpenShift using the file we just published
-      // The filename is openshift-tasks.war in the 'target' directory of your current
-      // Jenkins workspace
-      // Replace xyz-tasks-dev with the name of your dev project
       sh "oc start-build mlbparks --follow --from-file=./target/mlbparks.war -n ${GUID}-parks-dev"
 
       // OR use the file you just published into Nexus:
@@ -78,7 +74,6 @@ podTemplate(
       openshiftTag alias: 'false', destStream: 'mlbparks', destTag: devTag, destinationNamespace: "${GUID}-parks-dev", namespace: "${GUID}-parks-dev", srcStream: 'mlbparks', srcTag: 'latest', verbose: 'false'
     }
 
-    // Deploy the built image to the Development Environment.
     stage('Deploy to Dev') {
       echo "Deploying container image to Development Project"
       // Update the Image on the Development Deployment Config
@@ -94,7 +89,6 @@ podTemplate(
       openshiftVerifyService namespace: "${GUID}-parks-dev", svcName: 'mlbparks', verbose: 'false'
     }
 
-    // Copy Image to Nexus Docker Registry
     stage('Copy Image to Nexus Docker Registry') {
       echo "Copy image to Nexus Docker Registry"
       sh "skopeo copy --src-tls-verify=false --dest-tls-verify=false --src-creds openshift:\$(oc whoami -t) --dest-creds admin:admin123 docker://nexus-registry.${GUID}-nexus.svc.cluster.local:5000/${GUID}-parks-dev/mlbparks:${devTag} docker://nexus-registry.${GUID}-nexus.svc.cluster.local:5000/mlbparks:${devTag}"
@@ -116,8 +110,6 @@ podTemplate(
     }
 
     // Blue/Green Deployment into Production
-    // -------------------------------------
-    // Do not activate the new version yet.
     def destApp   = "mlbparks-green"
     def activeApp = ""
 

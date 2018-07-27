@@ -67,7 +67,7 @@ spec:
               mountPath: "/var/lib/mongodb/data"
           env:
             - name: MONGODB_DATABASE
-              value: "mongodb"
+              value: "parks"
             - name: MONGODB_USER
               value: "mongodb"
             - name: MONGODB_PASSWORD
@@ -105,7 +105,8 @@ oc new-build --binary=true --name="mlbparks" jboss-eap70-openshift:1.7 -n ${GUID
 oc new-app ${GUID}-parks-dev/mlbparks:0.0-0 --name=mlbparks --allow-missing-imagestream-tags=true -n ${GUID}-parks-dev
 oc set triggers dc/mlbparks --remove-all -n ${GUID}-parks-dev
 oc set probe dc/mlbparks --liveness  --failure-threshold 3 --initial-delay-seconds 60 -- echo ok -n ${GUID}-parks-dev
-oc set probe dc/mlbparks --readiness --failure-threshold 3 --initial-delay-seconds 60 --get-url=http://:8081/ws/healthz/ -n ${GUID}-parks-dev
+oc set probe dc/mlbparks --readiness --failure-threshold 3 --initial-delay-seconds 60 -- echo ok -n ${GUID}-parks-dev
+#oc set probe dc/mlbparks --readiness --failure-threshold 3 --initial-delay-seconds 60 --get-url=http://:8081/ws/healthz/ -n ${GUID}-parks-dev
 oc expose dc mlbparks --port 8080 -n ${GUID}-parks-dev
 oc expose svc mlbparks -n ${GUID}-parks-dev
 oc create configmap mlbparks-config --from-literal="application-users.properties=Placeholder" --from-literal="application-roles.properties=Placeholder" --from-literal="APPNAME=MLB Parks (Dev)" -n ${GUID}-parks-dev

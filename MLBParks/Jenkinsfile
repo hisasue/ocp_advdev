@@ -19,7 +19,6 @@ podTemplate(
   node('skopeo-pod') {
     echo "GUID: ${GUID}"
     echo "CLUSTER: ${CLUSTER}"
-    def mvnCmd = "mvn -s ./nexus_settings.xml"
 
 
     stage('Checkout Source') {
@@ -28,6 +27,7 @@ podTemplate(
     }
 
     dir('MLBParks'){
+    sh "sed s/%%GUID%%/${GUID}/g ../nexus_settings.xml > ./nexus_settings.xml"
     // Your Pipeline Code goes here. Make sure to use the ${GUID} and ${CLUSTER} parameters where appropriate
     // You need to build the application in directory `MLBParks`.
     // Also copy "../nexus_settings.xml" to your build directory
@@ -39,6 +39,7 @@ podTemplate(
     def devTag  = "${version}-${BUILD_NUMBER}"
     // Set the tag for the production image: version
     def prodTag = "${version}"
+    def mvnCmd = "mvn -s ./nexus_settings.xml"
 
     stage('Build war') {
       echo "Building version ${devTag}"

@@ -21,10 +21,10 @@ objects:
         type: "Git"
         git: 
           uri: "https://github.com/hisasue/ocp_advdev.git"
+        contextDir: "MLBParks"
       strategy:
         type: "JenkinsPipeline"
         jenkinsPipelineStrategy:
-          jenkinsfilePath: "MLBParks/Jenkinsfile"
           env:
             - name: GUID
               value: ${GUID}
@@ -43,10 +43,10 @@ objects:
         type: "Git"
         git: 
           uri: "https://github.com/hisasue/ocp_advdev.git"
+        contextDir: "Nationalparks"
       strategy:
         type: "JenkinsPipeline"
         jenkinsPipelineStrategy:
-          jenkinsfilePath: "Nationalparks/Jenkinsfile"
           env:
             - name: GUID
               value: ${GUID}
@@ -62,13 +62,13 @@ objects:
       name: "parksmap-pipeline"
     spec:
       source:
+        contextDir: "ParksMap"
         type: "Git"
         git: 
           uri: "https://github.com/hisasue/ocp_advdev.git"
       strategy:
         type: "JenkinsPipeline"
         jenkinsPipelineStrategy:
-          jenkinsfilePath: "ParksMap/Jenkinsfile"
           env:
             - name: GUID
               value: ${GUID}

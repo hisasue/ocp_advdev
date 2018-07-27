@@ -23,6 +23,12 @@ podTemplate(
     def mvnCmd = "mvn -s ./nexus_settings.xml"
 
 
+    stage('Checkout Source') {
+      //git url: 'http://thisasue:thisasue@gogs.thisasue-gogs.svc.cluster.local:3000/CICDLabs/openshift-tasks-private.git'
+      git url: 'https://github.com/hisasue/ocp_advdev'
+      sh 'cd MLBParks'
+    }
+
     // Your Pipeline Code goes here. Make sure to use the ${GUID} and ${CLUSTER} parameters where appropriate
     // You need to build the application in directory `MLBParks`.
     // Also copy "../nexus_settings.xml" to your build directory

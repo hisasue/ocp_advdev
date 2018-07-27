@@ -85,8 +85,8 @@ podTemplate(
       sh "oc set image dc/mlbparks mlbparks=docker-registry.default.svc:5000/${GUID}-parks-dev/mlbparks:${devTag} -n ${GUID}-parks-dev"
       
       // Update the Config Map which contains the users for the Tasks application
-      sh "oc delete configmap mlbparks-config -n ${GUID}-parks-dev --ignore-not-found=true"
-      sh "oc create configmap mlbparks-config --from-file=./configuration/application-users.properties --from-file=./configuration/application-roles.properties -n ${GUID}-parks-dev"
+      //sh "oc delete configmap mlbparks-config -n ${GUID}-parks-dev --ignore-not-found=true"
+      //sh "oc create configmap mlbparks-config --from-file=./configuration/application-users.properties --from-file=./configuration/application-roles.properties -n ${GUID}-parks-dev"
       
       // Deploy the development application.
       openshiftDeploy depCfg: 'mlbparks', namespace: "${GUID}-parks-dev", verbose: 'false', waitTime: '', waitUnit: 'sec'

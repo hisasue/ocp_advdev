@@ -29,12 +29,21 @@ echo "Setting up Jenkins in project ${GUID}-jenkins from Git Repo ${REPO} for Cl
 # To be Implemented by Student
 DIR=$(dirname $0)
 oc project ${GUID}-jenkins
-#oc new-app jenkins-persistent --param ENABLE_OAUTH=true --param MEMORY_LIMIT=2Gi --param VOLUME_CAPACITY=4Gi -n ${GUID}-jenkins
-#oc new-app jenkins-persistent --param ENABLE_OAUTH=true --param MEMORY_REQUEST=2Gi --param CPU_REQUEST=1 --param VOLUME_CAPACITY=4Gi -n ${GUID}-jenkins
-oc new-app jenkins-persistent --param ENABLE_OAUTH=true --param MEMORY_REQUEST=2Gi  --param VOLUME_CAPACITY=4Gi -n ${GUID}-jenkins -e GUID=${GUID} -e REPO=${REPO} -e CLUSTER=${CLUSTER}
-#cd $DIR/../templates/jenkins-slave-appdev/
-#docker build . -t docker-registry-default.apps.na39.openshift.opentlc.com/${GUID}-jenkins/jenkins-slave-maven-appdev:v3.9
-#docker login -u wkulhane-redhat.com -p $(oc whoami -t) docker-registry-default.apps.na39.openshift.opentlc.com
-#docker push docker-registry-default.apps.na39.openshift.opentlc.com/xyz-jenkins/jenkins-slave-maven-appdev:v3.9
-oc create -f ./Infrastructure/templates/bc-jenkins-slave.yaml -n ${GUID}-jenkins
-oc create -f ./Infrastructure/templates/bc-app.yaml -n ${GUID}-jenkins
+oc new-app jenkins-persistent --param ENABLE_OAUTH=true --param MEMORY_LIMIT=2Gi --param VOLUME_CAPACITY=4Gi -e GUID=${GUID} -e REPO=${REPO} -e CLUSTER=${CLUSTER} -n ${GUID}-jenkins
+cd $DIR/../templates/jenkins-slave-appdev/
+docker build . -t docker-registry-default.apps.na39.openshift.opentlc.com/${GUID}-jenkins/jenkins-slave-maven-appdev:v3.9
+docker login -u thisasue-redhat.com -p $(oc whoami -t) docker-registry-default.apps.na39.openshift.opentlc.com
+docker push docker-registry-default.apps.na39.openshift.opentlc.com/${GUID}-jenkins/jenkins-slave-maven-appdev:v3.9
+oc process -f ./Infrastructure/templates/bc-jenkins-slave.yaml \
+  -p GUID=${GUID} \
+  -p REPO=${REPO} \
+  -p CLUSTER=${CLUSTER} \
+  -n ${GUID}-jenkins \
+  | oc create -f -
+
+oc process -f ./Infrastructure/templates/bc-app.yaml \
+  -p GUID=${GUID} \
+  -p REPO=${REPO} \
+  -p CLUSTER=${CLUSTER} \
+  -n ${GUID}-jenkins \
+  | oc create -f -

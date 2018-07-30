@@ -2,6 +2,9 @@
 def GUID="${env.GUID}"
 def CLUSTER="${env.CLUSTER}"
 def REPO="${env.REPO}"
+def appName="mlbparks"
+def appDispName="MLB Parks"
+def appDir="MLBParks"
 
 podTemplate(
   label: "skopeo-pod",
@@ -26,7 +29,7 @@ podTemplate(
       git url: 'https://github.com/hisasue/ocp_advdev'
     }
 
-    dir('MLBParks'){
+    dir(appDir){
     sh "sed s/%%GUID%%/${GUID}/g ../nexus_settings.xml > ./nexus_settings.xml"
     // Your Pipeline Code goes here. Make sure to use the ${GUID} and ${CLUSTER} parameters where appropriate
     // You need to build the application in directory `MLBParks`.
@@ -67,30 +70,30 @@ podTemplate(
     // Build the OpenShift Image in OpenShift and tag it.
     stage('Build and Tag OpenShift Image') {
       echo "Building OpenShift container image tasks:${devTag}"
-      sh "oc start-build mlbparks --follow --from-file=./target/mlbparks.war -n ${GUID}-parks-dev"
+      sh "oc start-build ${appName} --follow --from-file=./target/${appName}.war -n ${GUID}-parks-dev"
 
       // OR use the file you just published into Nexus:
       // sh "oc start-build tasks --follow --from-file=http://nexus3.xyz-nexus.svc.cluster.local:8081/repository/releases/org/jboss/quickstarts/eap/tasks/${version}/tasks-${version}.war -n xyz-tasks-dev"
 
       // Tag the image using the devTag
-      openshiftTag alias: 'false', destStream: 'mlbparks', destTag: devTag, destinationNamespace: "${GUID}-parks-dev", namespace: "${GUID}-parks-dev", srcStream: 'mlbparks', srcTag: 'latest', verbose: 'false'
+      openshiftTag alias: 'false', destStream: appName, destTag: devTag, destinationNamespace: "${GUID}-parks-dev", namespace: "${GUID}-parks-dev", srcStream: appName, srcTag: 'latest', verbose: 'false'
     }
 
     stage('Deploy to Dev') {
       echo "Deploying container image to Development Project"
-      def appname_dev = 'MLBParks (Dev)'
+      def appNameDev = "${appDispName} (Dev)"
       // Update the Image on the Development Deployment Config
-      sh "oc set image dc/mlbparks mlbparks=docker-registry.default.svc:5000/${GUID}-parks-dev/mlbparks:${devTag} -n ${GUID}-parks-dev"
-      sh "oc set env dc/mlbparks APPNAME='${appname_dev}' DB_HOST=mongodb DB_PORT=27017 DB_USERNAME=mongodb DB_PASSWORD=mongodb DB_NAME=parks DB_REPLICASET=rs0 -n ${GUID}-parks-dev" 
+      sh "oc set image dc/${appName} ${appName}=docker-registry.default.svc:5000/${GUID}-parks-dev/${appName}:${devTag} -n ${GUID}-parks-dev"
+      sh "oc set env dc/${appName} APPNAME='${appNameDev}' DB_HOST=mongodb DB_PORT=27017 DB_USERNAME=mongodb DB_PASSWORD=mongodb DB_NAME=parks DB_REPLICASET=rs0 -n ${GUID}-parks-dev" 
       
       // Update the Config Map which contains the users for the Tasks application
       //sh "oc delete configmap mlbparks-config -n ${GUID}-parks-dev --ignore-not-found=true"
       //sh "oc create configmap mlbparks-config --from-file=./configuration/application-users.properties --from-file=./configuration/application-roles.properties -n ${GUID}-parks-dev"
       
       // Deploy the development application.
-      openshiftDeploy depCfg: 'mlbparks', namespace: "${GUID}-parks-dev", verbose: 'false', waitTime: '', waitUnit: 'sec'
-      openshiftVerifyDeployment depCfg: 'mlbparks', namespace: "${GUID}-parks-dev", replicaCount: '1', verbose: 'false', verifyReplicaCount: 'false', waitTime: '', waitUnit: 'sec'
-      openshiftVerifyService namespace: "${GUID}-parks-dev", svcName: 'mlbparks', verbose: 'false'
+      openshiftDeploy depCfg: appName, namespace: "${GUID}-parks-dev", verbose: 'false', waitTime: '', waitUnit: 'sec'
+      openshiftVerifyDeployment depCfg: appName, namespace: "${GUID}-parks-dev", replicaCount: '1', verbose: 'false', verifyReplicaCount: 'false', waitTime: '', waitUnit: 'sec'
+      openshiftVerifyService namespace: "${GUID}-parks-dev", svcName: appName, verbose: 'false'
     }
 
     stage('Integration Tests') {
@@ -100,28 +103,28 @@ podTemplate(
     // Copy Image to Nexus Docker Registry
     stage('Copy Image to Nexus Docker Registry') {
       echo "Copy image to Nexus Docker Registry"
-      sh "skopeo copy --src-tls-verify=false --dest-tls-verify=false --src-creds openshift:\$(oc whoami -t) --dest-creds admin:admin123 docker://docker-registry.default.svc.cluster.local:5000/${GUID}-parks-dev/mlbparks:${devTag} docker://nexus-registry.${GUID}-nexus.svc.cluster.local:5000/mlbparks:${devTag}"
+      sh "skopeo copy --src-tls-verify=false --dest-tls-verify=false --src-creds openshift:\$(oc whoami -t) --dest-creds admin:admin123 docker://docker-registry.default.svc.cluster.local:5000/${GUID}-parks-dev/${appName}:${devTag} docker://nexus-registry.${GUID}-nexus.svc.cluster.local:5000/${appName}:${devTag}"
 
       // Tag the built image with the production tag.
-      openshiftTag alias: 'false', destStream: 'mlbparks', destTag: prodTag, destinationNamespace: "${GUID}-parks-prod", namespace: "${GUID}-parks-dev", srcStream: 'mlbparks', srcTag: devTag, verbose: 'false'
+      openshiftTag alias: 'false', destStream: appName, destTag: prodTag, destinationNamespace: "${GUID}-parks-prod", namespace: "${GUID}-parks-dev", srcStream: appName, srcTag: devTag, verbose: 'false'
     }
 
     // Blue/Green Deployment into Production
-    def destApp   = "mlbparks-green"
+    def destApp   = "${appName}-green"
     def activeApp = ""
-    def appname_prod = "MLB Praks (Green)"
+    def appname_prod = "${appDispName} (Green)"
 
     stage('Blue/Green Production Deployment') {
-      activeApp = sh(returnStdout: true, script: "oc get route mlbparks -n ${GUID}-parks-prod -o jsonpath='{ .spec.to.name }'").trim()
-      if (activeApp == "mlbparks-green") {
-        destApp = "mlbparks-blue"
-        appname_prod ="MLB Parks (Blue)"
+      activeApp = sh(returnStdout: true, script: "oc get route ${appName} -n ${GUID}-parks-prod -o jsonpath='{ .spec.to.name }'").trim()
+      if (activeApp == "${appName}-green") {
+        destApp = "${appName}-blue"
+        appname_prod ="${appDispName} (Blue)"
       }
       echo "Active Application:      " + activeApp
       echo "Destination Application: " + destApp
 
       // Update the Image on the Production Deployment Config
-      sh "oc set image dc/${destApp} ${destApp}=docker-registry.default.svc:5000/${GUID}-parks-prod/mlbparks:${prodTag} -n ${GUID}-parks-prod"
+      sh "oc set image dc/${destApp} ${destApp}=docker-registry.default.svc:5000/${GUID}-parks-prod/${appName}:${prodTag} -n ${GUID}-parks-prod"
       sh "oc set env dc/${destApp} APPNAME=\"${appname_prod}\" DB_HOST=mongodb DB_PORT=27017 DB_USERNAME=mongodb DB_PASSWORD=mongodb DB_NAME=parks DB_REPLICASET=rs0 -n ${GUID}-parks-prod"
 
       //sh "oc delete configmap ${destApp}-config -n ${GUID}-parks-prod --ignore-not-found=true"
@@ -137,7 +140,7 @@ podTemplate(
       input "Switch Production?"
 
       echo "Switching Production application to ${destApp}."
-      sh "oc patch route mlbparks -n ${GUID}-parks-prod -p '{\"spec\":{\"to\":{\"name\":\"" + destApp + "\"}}}\'"
+      sh "oc patch route ${appName} -n ${GUID}-parks-prod -p '{\"spec\":{\"to\":{\"name\":\"" + destApp + "\"}}}\'"
     }
 
 

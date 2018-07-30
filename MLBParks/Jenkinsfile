@@ -120,7 +120,7 @@ podTemplate(
       echo "Destination Application: " + destApp
 
       // Update the Image on the Production Deployment Config
-      sh "oc set image dc/${destApp} ${destApp}=docker-registry.default.svc:5000/${GUID}-prks-prod/mlbparks:${prodTag} -n ${GUID}-parks-prod"
+      sh "oc set image dc/${destApp} ${destApp}=docker-registry.default.svc:5000/${GUID}-parks-prod/mlbparks:${prodTag} -n ${GUID}-parks-prod"
       sh "oc set env dc/${destApp} APPNAME=\"${appname}\" DB_HOST=mongodb DB_PORT=27017 DB_USERNAME=mongodb DB_PASSWORD=mongodb DB_NAME=parks DB_REPLICASET=rs0 -n ${GUID}-parks-prod"
 
       //sh "oc delete configmap ${destApp}-config -n ${GUID}-parks-prod --ignore-not-found=true"

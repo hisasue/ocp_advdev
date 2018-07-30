@@ -102,7 +102,7 @@ podTemplate(
       sh "skopeo copy --src-tls-verify=false --dest-tls-verify=false --src-creds openshift:\$(oc whoami -t) --dest-creds admin:admin123 docker://docker-registry.default.svc.cluster.local:5000/${GUID}-parks-dev/mlbparks:${devTag} docker://nexus-registry.${GUID}-nexus.svc.cluster.local:5000/mlbparks:${devTag}"
 
       // Tag the built image with the production tag.
-      openshiftTag alias: 'false', destStream: 'mlbparks', destTag: prodTag, destinationNamespace: "${GUID}-parks-dev", namespace: "${GUID}-parks-dev", srcStream: 'mlbparks', srcTag: devTag, verbose: 'false'
+      openshiftTag alias: 'false', destStream: 'mlbparks', destTag: prodTag, destinationNamespace: "${GUID}-parks-prod", namespace: "${GUID}-parks-dev", srcStream: 'mlbparks', srcTag: devTag, verbose: 'false'
     }
 
     // Blue/Green Deployment into Production

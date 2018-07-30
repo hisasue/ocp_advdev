@@ -103,6 +103,7 @@ oc policy add-role-to-group system:image-puller system:serviceaccounts:${GUID}-p
 
 # MLBParks
 oc new-build --binary=true --name="mlbparks" jboss-eap70-openshift:1.7 -n ${GUID}-parks-prod
+#oc patch bc mlbparks -p '{"spec":{"resources":{"requests":{"cpu": 1,"memory": "2Gi"}}}}' -n ${GUID}-parks-prod
 oc new-app ${GUID}-parks-prod/mlbparks:0.0-0 --name=mlbparks-green --allow-missing-imagestream-tags=true -l type=parksmap-backend -n ${GUID}-parks-prod
 oc new-app ${GUID}-parks-prod/mlbparks:0.0-0 --name=mlbparks-blue  --allow-missing-imagestream-tags=true -l type=parksmap-backend -n ${GUID}-parks-prod
 oc set triggers dc/mlbparks-green --remove-all -n ${GUID}-parks-prod

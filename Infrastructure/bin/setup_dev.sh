@@ -102,6 +102,7 @@ oc policy add-role-to-user admin system:serviceaccount:gpte-jenkins:jenkins -n $
 
 # Set up MLBParks Dev Application
 oc new-build --binary=true --name="mlbparks" jboss-eap70-openshift:1.7 -n ${GUID}-parks-dev
+#oc patch bc mlbparks -p '{"spec":{"resources":{"requests":{"cpu": 1,"memory": "2Gi"}}}}' -n ${GUID}-parks-dev
 oc new-app ${GUID}-parks-dev/mlbparks:0.0-0 --name=mlbparks --allow-missing-imagestream-tags=true -n ${GUID}-parks-dev
 oc set triggers dc/mlbparks --remove-all -n ${GUID}-parks-dev
 oc set probe dc/mlbparks --liveness  --failure-threshold 3 --initial-delay-seconds 60 -- echo ok -n ${GUID}-parks-dev

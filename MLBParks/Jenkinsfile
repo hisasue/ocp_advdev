@@ -46,11 +46,13 @@ podTemplate(
       sh "${mvnCmd} clean package -DskipTests=true"
     }
 
-    stage('Unit Tests') {
-      echo "Running Unit Tests"
-      sh "${mvnCmd} test"
-    }
+    //TODO: uncomment before submit
+    //stage('Unit Tests') {
+    //  echo "Running Unit Tests"
+    //  sh "${mvnCmd} test"
+    //}
 
+    //TODO: uncomment before submit
     //stage('Code Analysis') {
     //  echo "Running Code Analysis"
     //  sh "${mvnCmd} sonar:sonar -Dsonar.host.url=http://sonarqube-${GUID}-sonarqube.apps.${CLUSTER}/ -Dsonar.projectName=${JOB_BASE_NAME}-${devTag}"

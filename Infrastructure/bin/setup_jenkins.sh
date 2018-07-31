@@ -32,24 +32,22 @@ DIR=$(pwd)/$(dirname $0)
 oc project ${GUID}-jenkins
 oc new-app jenkins-persistent --param ENABLE_OAUTH=true --param MEMORY_LIMIT=2Gi --param VOLUME_CAPACITY=4Gi -e GUID=${GUID} -e REPO=${REPO} -e CLUSTER=${CLUSTER} -n ${GUID}-jenkins
 #yum install -y docker
-echo `pwd`
-echo `ls`
 #cd $DIR/../templates/jenkins-slave-appdev/
-cd ./Infrastructure/templates/jenkins-slave-appdev/
-docker build . -t docker-registry-default.apps.na39.openshift.opentlc.com/${GUID}-jenkins/jenkins-slave-maven-appdev:v3.9
-docker login -u thisasue-redhat.com -p $(oc whoami -t) docker-registry-default.apps.na39.openshift.opentlc.com
-docker push docker-registry-default.apps.na39.openshift.opentlc.com/${GUID}-jenkins/jenkins-slave-maven-appdev:v3.9
-cd ../
-#oc process -f $DIR/../templates/bc-jenkins-slave.yaml \
-oc process -f bc-jenkins-slave.yaml \
+oc new-build --name=jenkins-slave-maven-appdev --dockerfile=$'FROM docker.io/openshift/jenkins-slave-maven-centos7:v3.9\nUSER root\nRUN yum -y install skopeo apb && yum clean all\nUSER 1001' && \
+  oc tag jenkins-slave-maven-appdev:latest jenkins-slave-appdev:v3.9
+#cd ./Infrastructure/templates/jenkins-slave-appdev/
+#docker build . -t docker-registry-default.apps.na39.openshift.opentlc.com/${GUID}-jenkins/jenkins-slave-maven-appdev:v3.9
+#docker login -u thisasue-redhat.com -p $(oc whoami -t) docker-registry-default.apps.na39.openshift.opentlc.com
+#docker push docker-registry-default.apps.na39.openshift.opentlc.com/${GUID}-jenkins/jenkins-slave-maven-appdev:v3.9
+#cd ../
+oc process -f ./Infrastructure/templates/bc-jenkins-slave.yaml \
   -p GUID=${GUID} \
   -p REPO=${REPO} \
   -p CLUSTER=${CLUSTER} \
   -n ${GUID}-jenkins \
   | oc create -f -
 
-#oc process -f $DIR/../templates/bc-app.yaml \
-oc process -f bc-app.yaml \
+oc process -f ./Infrastructure/templates/bc-app.yaml \
   -p GUID=${GUID} \
   -p REPO=${REPO} \
   -p CLUSTER=${CLUSTER} \

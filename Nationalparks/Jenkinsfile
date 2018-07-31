@@ -66,7 +66,7 @@ podTemplate(
       // Build the OpenShift Image in OpenShift and tag it.
       stage('Build and Tag OpenShift Image') {
         echo "Building OpenShift container image tasks:${devTag}"
-        sh "oc start-build ${appName} --follow --from-file=./target/${appName}.war -n ${GUID}-parks-dev"
+        sh "oc start-build ${appName} --follow --from-file=./target/${appName}.jar -n ${GUID}-parks-dev"
 
         // OR use the file you just published into Nexus:
         // sh "oc start-build tasks --follow --from-file=http://nexus3.xyz-nexus.svc.cluster.local:8081/repository/releases/org/jboss/quickstarts/eap/tasks/${version}/tasks-${version}.war -n xyz-tasks-dev"

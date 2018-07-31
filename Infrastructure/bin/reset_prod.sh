@@ -18,6 +18,8 @@ echo "Resetting Parks Production Environment in project ${GUID}-parks-prod to Gr
 # rollout followed by a Green rollout.
 
 # To be Implemented by Student
-oc patch route mlbparks -n ${GUID}-parks-prod -p '{"spec":{"to":{"name":"mlbparks-green"}}}'
-oc patch route nationalparks -n ${GUID}-parks-prod -p '{"spec":{"to":{"name":"nationalparks-green"}}}'
-oc patch route parksmap -n ${GUID}-parks-prod -p '{"spec":{"to":{"name":"parksmap-green"}}}'
+oc patch route mlbparks-p '{"spec":{"to":{"name":"mlbparks-green"}}}' -n ${GUID}-parks-prod 
+oc patch route nationalparks -p '{"spec":{"to":{"name":"nationalparks-green"}}}' -n ${GUID}-parks-prod
+oc patch route parksmap -p '{"spec":{"to":{"name":"parksmap-green"}}}' -n ${GUID}-parks-prod
+
+exit 0

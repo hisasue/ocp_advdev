@@ -28,21 +28,24 @@ echo "Setting up Jenkins in project ${GUID}-jenkins from Git Repo ${REPO} for Cl
 
 # To be Implemented by Student
 oc policy add-role-to-user admin system:serviceaccount:gpte-jenkins:jenkins -n ${GUID}-jenkins
-DIR=$(pwd)/$(dirname $0)
+#DIR=$(pwd)/$(dirname $0)
 oc project ${GUID}-jenkins
 oc new-app jenkins-persistent --param ENABLE_OAUTH=true --param MEMORY_LIMIT=2Gi --param VOLUME_CAPACITY=4Gi -e GUID=${GUID} -e REPO=${REPO} -e CLUSTER=${CLUSTER} -n ${GUID}-jenkins
-cd $DIR/../templates/jenkins-slave-appdev/
-docker build . -t docker-registry-default.apps.na39.openshift.opentlc.com/${GUID}-jenkins/jenkins-slave-maven-appdev:v3.9
-docker login -u thisasue-redhat.com -p $(oc whoami -t) docker-registry-default.apps.na39.openshift.opentlc.com
-docker push docker-registry-default.apps.na39.openshift.opentlc.com/${GUID}-jenkins/jenkins-slave-maven-appdev:v3.9
-oc process -f $DIR/../templates/bc-jenkins-slave.yaml \
+#cd $DIR/../templates/jenkins-slave-appdev/
+#docker build . -t docker-registry-default.apps.na39.openshift.opentlc.com/${GUID}-jenkins/jenkins-slave-maven-appdev:v3.9
+#docker login -u thisasue-redhat.com -p $(oc whoami -t) docker-registry-default.apps.na39.openshift.opentlc.com
+#docker push docker-registry-default.apps.na39.openshift.opentlc.com/${GUID}-jenkins/jenkins-slave-maven-appdev:v3.9
+#oc process -f $DIR/../templates/bc-jenkins-slave.yaml \
+echo `pwd`
+oc process -f ./Infrastructure/templates/bc-jenkins-slave.yaml \
   -p GUID=${GUID} \
   -p REPO=${REPO} \
   -p CLUSTER=${CLUSTER} \
   -n ${GUID}-jenkins \
   | oc create -f -
 
-oc process -f $DIR/../templates/bc-app.yaml \
+#oc process -f $DIR/../templates/bc-app.yaml \
+oc process -f ./Infrastructure/templates/bc-app.yaml \
   -p GUID=${GUID} \
   -p REPO=${REPO} \
   -p CLUSTER=${CLUSTER} \

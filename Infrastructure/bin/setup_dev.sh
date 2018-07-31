@@ -126,3 +126,18 @@ oc expose svc nationalparks -n ${GUID}-parks-dev
 oc create configmap nationalparks-config --from-literal="application-users.properties=Placeholder" --from-literal="application-roles.properties=Placeholder" --from-literal="APPNAME=National Parks (Dev)" -n ${GUID}-parks-dev
 oc set volume dc/nationalparks --add --name=jboss-config --mount-path=/opt/eap/standalone/configuration/application-users.properties --sub-path=application-users.properties --configmap-name=nationalparks-config -n ${GUID}-parks-dev
 oc set volume dc/nationalparks --add --name=jboss-config1 --mount-path=/opt/eap/standalone/configuration/application-roles.properties --sub-path=application-roles.properties --configmap-name=nationalparks-config -n ${GUID}-parks-dev
+
+# Set up ParksMap Dev Application
+oc policy add-role-to-user view --serviceaccount=default -n ${GUID}-parks-prod
+oc new-build --binary=true --name="parksmap" redhat-openjdk18-openshift:1.2 -n ${GUID}-parks-dev
+#oc patch bc parksmap -p '{"spec":{"resources":{"requests":{"cpu": 1,"memory": "2Gi"}}}}' -n ${GUID}-parks-dev
+oc new-app ${GUID}-parks-dev/parksmap:0.0-0 --name=parksmap --allow-missing-imagestream-tags=true -n ${GUID}-parks-dev
+oc set triggers dc/parksmap --remove-all -n ${GUID}-parks-dev
+oc set probe dc/parksmap --liveness  --failure-threshold 3 --initial-delay-seconds 60 -- echo ok -n ${GUID}-parks-dev
+oc set probe dc/parksmap --readiness --failure-threshold 3 --initial-delay-seconds 60 -- echo ok -n ${GUID}-parks-dev
+#oc set probe dc/parksmap --readiness --failure-threshold 3 --initial-delay-seconds 60 --get-url=http://:8081/ws/healthz/ -n ${GUID}-parks-dev
+oc expose dc parksmap --port 8080 -n ${GUID}-parks-dev
+oc expose svc parksmap -n ${GUID}-parks-dev
+oc create configmap parksmap-config --from-literal="application-users.properties=Placeholder" --from-literal="application-roles.properties=Placeholder" --from-literal="APPNAME=ParksMap (Dev)" -n ${GUID}-parks-dev
+oc set volume dc/parksmap --add --name=jboss-config --mount-path=/opt/eap/standalone/configuration/application-users.properties --sub-path=application-users.properties --configmap-name=parksmap-config -n ${GUID}-parks-dev
+oc set volume dc/parksmap --add --name=jboss-config1 --mount-path=/opt/eap/standalone/configuration/application-roles.properties --sub-path=application-roles.properties --configmap-name=parksmap-config -n ${GUID}-parks-dev

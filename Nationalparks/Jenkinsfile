@@ -39,7 +39,7 @@ podTemplate(
       def prodTag = "${version}"
       def mvnCmd = "mvn -s ./nexus_settings.xml"
 
-      stage('Build war') {
+      stage('Build jar') {
         echo "Building version ${devTag}"
         sh "${mvnCmd} clean package -DskipTests=true"
         //sh "${mvnCmd} clean package -Dmaven.test.skip=true"
@@ -57,7 +57,7 @@ podTemplate(
       //  sh "${mvnCmd} sonar:sonar -Dsonar.host.url=http://sonarqube-${GUID}-sonarqube.apps.${CLUSTER}/ -Dsonar.projectName=${JOB_BASE_NAME}-${devTag}"
       //}
 
-      // Publish the built war file to Nexus
+      // Publish the built jar file to Nexus
       stage('Publish to Nexus') {
         echo "Publish to Nexus"
         sh "${mvnCmd} deploy -DaltDeploymentRepository=nexus::default::http://nexus3.${GUID}-nexus.svc.cluster.local:8081/repository/releases"

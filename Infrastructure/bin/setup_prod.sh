@@ -146,3 +146,25 @@ oc set volume dc/nationalparks-green --add --name=jboss-config-green --mount-pat
 oc set volume dc/nationalparks-green --add --name=jboss-config1-green --mount-path=/opt/eap/standalone/configuration/application-roles.properties --sub-path=application-roles.properties --configmap-name=nationalparks-green-config -n ${GUID}-parks-prod
 oc set volume dc/nationalparks-blue  --add --name=jboss-config-blue --mount-path=/opt/eap/standalone/configuration/application-users.properties --sub-path=application-users.properties --configmap-name=nationalparks-blue-config -n ${GUID}-parks-prod
 oc set volume dc/nationalparks-blue  --add --name=jboss-config1-blue --mount-path=/opt/eap/standalone/configuration/application-roles.properties --sub-path=application-roles.properties --configmap-name=nationalparks-blue-config -n ${GUID}-parks-prod
+
+# parksmap
+oc policy add-role-to-user view --serviceaccount=default -n ${GUID}-parks-prod
+oc new-build --binary=true --name="parksmap" redhat-openjdk18-openshift:1.2 -n ${GUID}-parks-prod
+#oc patch bc parksmap -p '{"spec":{"resources":{"requests":{"cpu": 1,"memory": "2Gi"}}}}' -n ${GUID}-parks-prod
+oc new-app ${GUID}-parks-prod/parksmap:0.0-0 --name=parksmap-green --allow-missing-imagestream-tags=true -l type=parksmap-backend -n ${GUID}-parks-prod
+oc new-app ${GUID}-parks-prod/parksmap:0.0-0 --name=parksmap-blue  --allow-missing-imagestream-tags=true -l type=parksmap-backend -n ${GUID}-parks-prod
+oc set triggers dc/parksmap-blue  --remove-all -n ${GUID}-parks-prod
+oc set probe dc/parksmap-green --liveness  --failure-threshold 3 --initial-delay-seconds 60 -- echo ok -n ${GUID}-parks-prod
+oc set probe dc/parksmap-green --readiness --failure-threshold 3 --initial-delay-seconds 60 -- echo ok -n ${GUID}-parks-prod
+oc set probe dc/parksmap-blue  --liveness  --failure-threshold 3 --initial-delay-seconds 60 -- echo ok -n ${GUID}-parks-prod
+oc set probe dc/parksmap-blue  --readiness --failure-threshold 3 --initial-delay-seconds 60 -- echo ok -n ${GUID}-parks-prod
+#oc set probe dc/parksmap --readiness --failure-threshold 3 --initial-delay-seconds 60 --get-url=http://:8081/ws/healthz/ -n ${GUID}-parks-prod
+oc expose dc parksmap-green --port 8080 -n ${GUID}-parks-prod
+oc expose dc parksmap-blue  --port 8080 -n ${GUID}-parks-prod
+oc expose svc parksmap-green --name parksmap -n ${GUID}-parks-prod
+oc create configmap parksmap-green-config --from-literal="application-users.properties=Placeholder" --from-literal="application-roles.properties=Placeholder" --from-literal="APPNAME=ParksMap (Green)" -n ${GUID}-parks-prod
+oc create configmap parksmap-blue-config  --from-literal="application-users.properties=Placeholder" --from-literal="application-roles.properties=Placeholder" --from-literal="APPNAME=ParksMap (Blue)"  -n ${GUID}-parks-prod
+oc set volume dc/parksmap-green --add --name=jboss-config-green --mount-path=/opt/eap/standalone/configuration/application-users.properties --sub-path=application-users.properties --configmap-name=parksmap-green-config -n ${GUID}-parks-prod
+oc set volume dc/parksmap-green --add --name=jboss-config1-green --mount-path=/opt/eap/standalone/configuration/application-roles.properties --sub-path=application-roles.properties --configmap-name=parksmap-green-config -n ${GUID}-parks-prod
+oc set volume dc/parksmap-blue  --add --name=jboss-config-blue --mount-path=/opt/eap/standalone/configuration/application-users.properties --sub-path=application-users.properties --configmap-name=parksmap-blue-config -n ${GUID}-parks-prod
+oc set volume dc/parksmap-blue  --add --name=jboss-config1-blue --mount-path=/opt/eap/standalone/configuration/application-roles.properties --sub-path=application-roles.properties --configmap-name=parksmap-blue-config -n ${GUID}-parks-prod

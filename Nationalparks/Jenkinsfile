@@ -41,8 +41,8 @@ podTemplate(
 
       stage('Build war') {
         echo "Building version ${devTag}"
-        //sh "${mvnCmd} clean package -DskipTests=true"
-        sh "${mvnCmd} clean package -Dmaven.test.skip=true"
+        sh "${mvnCmd} clean package -DskipTests=true"
+        //sh "${mvnCmd} clean package -Dmaven.test.skip=true"
       }
 
       //TODO: uncomment before submit

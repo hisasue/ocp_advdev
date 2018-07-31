@@ -130,7 +130,6 @@ oc set volume dc/nationalparks --add --name=jboss-config1 --mount-path=/opt/eap/
 # Set up ParksMap Dev Application
 oc policy add-role-to-user view --serviceaccount=default -n ${GUID}-parks-dev
 oc new-build --binary=true --name="parksmap" redhat-openjdk18-openshift:1.2 -n ${GUID}-parks-dev
-#oc patch bc parksmap -p '{"spec":{"resources":{"requests":{"cpu": 1,"memory": "2Gi"}}}}' -n ${GUID}-parks-dev
 oc new-app ${GUID}-parks-dev/parksmap:0.0-0 --name=parksmap --allow-missing-imagestream-tags=true -n ${GUID}-parks-dev
 oc set triggers dc/parksmap --remove-all -n ${GUID}-parks-dev
 oc set probe dc/parksmap --liveness  --failure-threshold 3 --initial-delay-seconds 60 -- echo ok -n ${GUID}-parks-dev

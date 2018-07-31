@@ -79,7 +79,7 @@ podTemplate(
         def appNameDev = "${appDispName} (Dev)"
         // Update the Image on the Development Deployment Config
         sh "oc set image dc/${appName} ${appName}=docker-registry.default.svc:5000/${GUID}-parks-dev/${appName}:${devTag} -n ${GUID}-parks-dev"
-        sh "oc set env dc/${appName} APPNAME='${appNameDev}' DB_HOST=mongodb DB_PORT=27017 DB_USERNAME=mongodb DB_PASSWORD=mongodb DB_NAME=parks DB_REPLICASET=rs0 -n ${GUID}-parks-dev" 
+        sh "oc set env dc/${appName} APPNAME='${appNameDev}'"// DB_HOST=mongodb DB_PORT=27017 DB_USERNAME=mongodb DB_PASSWORD=mongodb DB_NAME=parks DB_REPLICASET=rs0 -n ${GUID}-parks-dev" 
         
         // Update the Config Map which contains the users for the Tasks application
         //sh "oc delete configmap mlbparks-config -n ${GUID}-parks-dev --ignore-not-found=true"
@@ -120,7 +120,7 @@ podTemplate(
 
         // Update the Image on the Production Deployment Config
         sh "oc set image dc/${destApp} ${destApp}=docker-registry.default.svc:5000/${GUID}-parks-prod/${appName}:${prodTag} -n ${GUID}-parks-prod"
-        sh "oc set env dc/${destApp} APPNAME=\"${appname_prod}\" DB_HOST=mongodb DB_PORT=27017 DB_USERNAME=mongodb DB_PASSWORD=mongodb DB_NAME=parks DB_REPLICASET=rs0 -n ${GUID}-parks-prod"
+        sh "oc set env dc/${destApp} APPNAME=\"${appname_prod}\""// DB_HOST=mongodb DB_PORT=27017 DB_USERNAME=mongodb DB_PASSWORD=mongodb DB_NAME=parks DB_REPLICASET=rs0 -n ${GUID}-parks-prod"
 
         //sh "oc delete configmap ${destApp}-config -n ${GUID}-parks-prod --ignore-not-found=true"
         //sh "oc create configmap ${destApp}-config --from-file=./configuration/application-users.properties --from-file=./configuration/application-roles.properties -n ${GUID}-parks-prod"

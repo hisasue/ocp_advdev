@@ -151,8 +151,8 @@ oc set volume dc/nationalparks-blue  --add --name=jboss-config1-blue --mount-pat
 oc policy add-role-to-user view --serviceaccount=default -n ${GUID}-parks-prod
 oc new-build --binary=true --name="parksmap" redhat-openjdk18-openshift:1.2 -n ${GUID}-parks-prod
 #oc patch bc parksmap -p '{"spec":{"resources":{"requests":{"cpu": 1,"memory": "2Gi"}}}}' -n ${GUID}-parks-prod
-oc new-app ${GUID}-parks-prod/parksmap:0.0-0 --name=parksmap-green --allow-missing-imagestream-tags=true -l type=parksmap-backend -n ${GUID}-parks-prod
-oc new-app ${GUID}-parks-prod/parksmap:0.0-0 --name=parksmap-blue  --allow-missing-imagestream-tags=true -l type=parksmap-backend -n ${GUID}-parks-prod
+oc new-app ${GUID}-parks-prod/parksmap:0.0-0 --name=parksmap-green --allow-missing-imagestream-tags=true -n ${GUID}-parks-prod
+oc new-app ${GUID}-parks-prod/parksmap:0.0-0 --name=parksmap-blue  --allow-missing-imagestream-tags=true -n ${GUID}-parks-prod
 oc set triggers dc/parksmap-blue  --remove-all -n ${GUID}-parks-prod
 oc set probe dc/parksmap-green --liveness  --failure-threshold 3 --initial-delay-seconds 60 -- echo ok -n ${GUID}-parks-prod
 oc set probe dc/parksmap-green --readiness --failure-threshold 3 --initial-delay-seconds 60 -- echo ok -n ${GUID}-parks-prod

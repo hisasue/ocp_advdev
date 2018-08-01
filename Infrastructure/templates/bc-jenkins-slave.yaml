@@ -13,7 +13,7 @@ objects:
   - kind: "BuildConfig"
     apiVersion: "v1"
     metadata:
-      name: "jenkins-slave-appdev"
+      name: "jenkins-slave-maven-appdev"
     spec:
       source:
         dockerfile: |

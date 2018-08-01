@@ -100,10 +100,19 @@ oc policy add-role-to-user admin system:serviceaccount:${GUID}-jenkins:jenkins -
 oc policy add-role-to-user admin system:serviceaccount:gpte-jenkins:jenkins -n ${GUID}-parks-dev
 
 # Set up MLBParks Dev Application
-oc new-build --binary=true --name="mlbparks" jboss-eap70-openshift:1.7 -n ${GUID}-parks-dev && \
+oc new-build --binary=true --name="mlbparks" jboss-eap70-openshift:1.7 -n ${GUID}-parks-dev
 #oc patch bc mlbparks -p '{"spec":{"resources":{"requests":{"cpu": 1,"memory": "2Gi"}}}}' -n ${GUID}-parks-dev && \
-oc new-app ${GUID}-parks-dev/mlbparks:0.0-0 --name=mlbparks --allow-missing-imagestream-tags=true -l type=parksmap-backend -n ${GUID}-parks-dev && \
-sleep 10 && \
+oc new-app ${GUID}-parks-dev/mlbparks:0.0-0 --name=mlbparks --allow-missing-imagestream-tags=true -l type=parksmap-backend -n ${GUID}-parks-dev
+
+for i in `seq 1 10`
+do
+ echo "Checking if dc/mlbparks is ready..."
+ oc get dc mlbparks -n ${GUID}-parks-prod
+ [[ "$?" == "1" ]] || break
+ echo "...no. Sleeping 10 seconds."
+ sleep 10
+done
+
 oc set triggers dc/mlbparks --remove-all -n ${GUID}-parks-dev && \
 oc set probe dc/mlbparks --liveness  --failure-threshold 3 --initial-delay-seconds 60 -- echo ok -n ${GUID}-parks-dev && \
 oc set probe dc/mlbparks --readiness --failure-threshold 3 --initial-delay-seconds 60 -- echo ok -n ${GUID}-parks-dev && \
@@ -114,10 +123,19 @@ oc set volume dc/mlbparks --add --name=jboss-config --mount-path=/opt/eap/standa
 oc set volume dc/mlbparks --add --name=jboss-config1 --mount-path=/opt/eap/standalone/configuration/application-roles.properties --sub-path=application-roles.properties --configmap-name=mlbparks-config -n ${GUID}-parks-dev
 
 # Set up Nationalparks Dev Application
-oc new-build --binary=true --name="nationalparks" redhat-openjdk18-openshift:1.2 -n ${GUID}-parks-dev && \
-#oc patch bc nationalparks -p '{"spec":{"resources":{"requests":{"cpu": 1,"memory": "2Gi"}}}}' -n ${GUID}-parks-dev && \
-oc new-app ${GUID}-parks-dev/nationalparks:0.0-0 --name=nationalparks --allow-missing-imagestream-tags=true -l type=parksmap-backend -n ${GUID}-parks-dev && \
-sleep 10 && \
+oc new-build --binary=true --name="nationalparks" redhat-openjdk18-openshift:1.2 -n ${GUID}-parks-dev
+#oc patch bc nationalparks -p '{"spec":{"resources":{"requests":{"cpu": 1,"memory": "2Gi"}}}}' -n ${GUID}-parks-dev
+oc new-app ${GUID}-parks-dev/nationalparks:0.0-0 --name=nationalparks --allow-missing-imagestream-tags=true -l type=parksmap-backend -n ${GUID}-parks-dev
+
+for i in `seq 1 10`
+do
+ echo "Checking if dc/nationalparks is ready..."
+ oc get dc nationalparks -n ${GUID}-parks-prod
+ [[ "$?" == "1" ]] || break
+ echo "...no. Sleeping 10 seconds."
+ sleep 10
+done
+
 oc set triggers dc/nationalparks --remove-all -n ${GUID}-parks-dev && \
 oc set probe dc/nationalparks --liveness  --failure-threshold 3 --initial-delay-seconds 60 -- echo ok -n ${GUID}-parks-dev && \
 oc set probe dc/nationalparks --readiness --failure-threshold 3 --initial-delay-seconds 60 -- echo ok -n ${GUID}-parks-dev && \
@@ -128,10 +146,19 @@ oc set volume dc/nationalparks --add --name=jboss-config --mount-path=/opt/eap/s
 oc set volume dc/nationalparks --add --name=jboss-config1 --mount-path=/opt/eap/standalone/configuration/application-roles.properties --sub-path=application-roles.properties --configmap-name=nationalparks-config -n ${GUID}-parks-dev
 
 # Set up ParksMap Dev Application
-oc policy add-role-to-user view --serviceaccount=default -n ${GUID}-parks-dev && \
-oc new-build --binary=true --name="parksmap" redhat-openjdk18-openshift:1.2 -n ${GUID}-parks-dev && \
-oc new-app ${GUID}-parks-dev/parksmap:0.0-0 --name=parksmap --allow-missing-imagestream-tags=true -n ${GUID}-parks-dev && \
-sleep 10 && \
+oc policy add-role-to-user view --serviceaccount=default -n ${GUID}-parks-dev
+oc new-build --binary=true --name="parksmap" redhat-openjdk18-openshift:1.2 -n ${GUID}-parks-dev
+oc new-app ${GUID}-parks-dev/parksmap:0.0-0 --name=parksmap --allow-missing-imagestream-tags=true -n ${GUID}-parks-dev
+
+for i in `seq 1 10`
+do
+ echo "Checking if dc/parksmap is ready..."
+ oc get dc parksmap -n ${GUID}-parks-prod
+ [[ "$?" == "1" ]] || break
+ echo "...no. Sleeping 10 seconds."
+ sleep 10
+done
+
 oc set triggers dc/parksmap --remove-all -n ${GUID}-parks-dev && \
 oc set probe dc/parksmap --liveness  --failure-threshold 3 --initial-delay-seconds 60 -- echo ok -n ${GUID}-parks-dev && \
 oc set probe dc/parksmap --readiness --failure-threshold 3 --initial-delay-seconds 60 -- echo ok -n ${GUID}-parks-dev && \

@@ -129,6 +129,7 @@ podTemplate(
 
         // Deploy the inactive application.
         openshiftDeploy depCfg: destApp, namespace: "${GUID}-parks-prod", verbose: 'false', waitTime: '', waitUnit: 'sec'
+        sh "oc expose dc ${destApp} --port 8080 -l type=parksmap-backend -n ${GUID}-parks-prod"
         openshiftVerifyDeployment depCfg: destApp, namespace: "${GUID}-parks-prod", replicaCount: '1', verbose: 'false', verifyReplicaCount: 'true', waitTime: '', waitUnit: 'sec'
         openshiftVerifyService namespace: "${GUID}-parks-prod", svcName: destApp, verbose: 'false'
       }

@@ -113,8 +113,8 @@ oc set probe dc/mlbparks-green --liveness  --failure-threshold 3 --initial-delay
 oc set probe dc/mlbparks-green --readiness --failure-threshold 3 --initial-delay-seconds 60 -- echo ok -n ${GUID}-parks-prod && \
 oc set probe dc/mlbparks-blue  --liveness  --failure-threshold 3 --initial-delay-seconds 60 -- echo ok -n ${GUID}-parks-prod && \
 oc set probe dc/mlbparks-blue  --readiness --failure-threshold 3 --initial-delay-seconds 60 -- echo ok -n ${GUID}-parks-prod && \
-oc expose dc mlbparks-green --port 8080 -n ${GUID}-parks-prod && \
-oc expose dc mlbparks-blue  --port 8080 -l type=parksmap-backend -n ${GUID}-parks-prod && \
+oc expose dc mlbparks-green --port 8080 -l type=parksmap-backend -n ${GUID}-parks-prod && \
+#oc expose dc mlbparks-blue  --port 8080 -n ${GUID}-parks-prod && \
 oc expose svc mlbparks-green --name mlbparks -n ${GUID}-parks-prod && \
 oc create configmap mlbparks-green-config --from-literal="application-users.properties=Placeholder" --from-literal="application-roles.properties=Placeholder" --from-literal="APPNAME=MLB Parks (Green)" -n ${GUID}-parks-prod && \
 oc create configmap mlbparks-blue-config  --from-literal="application-users.properties=Placeholder" --from-literal="application-roles.properties=Placeholder" --from-literal="APPNAME=MLB Parks (Blue)"  -n ${GUID}-parks-prod && \
@@ -139,7 +139,7 @@ oc set probe dc/nationalparks-green --readiness --failure-threshold 3 --initial-
 oc set probe dc/nationalparks-blue  --liveness  --failure-threshold 3 --initial-delay-seconds 60 -- echo ok -n ${GUID}-parks-prod && \
 oc set probe dc/nationalparks-blue  --readiness --failure-threshold 3 --initial-delay-seconds 60 -- echo ok -n ${GUID}-parks-prod && \
 oc expose dc nationalparks-green --port 8080 -l type=parksmap-backend -n ${GUID}-parks-prod && \
-oc expose dc nationalparks-blue  --port 8080 -n ${GUID}-parks-prod && \
+#oc expose dc nationalparks-blue  --port 8080 -n ${GUID}-parks-prod && \
 oc expose svc nationalparks-green --name nationalparks -n ${GUID}-parks-prod && \
 oc create configmap nationalparks-green-config --from-literal="application-users.properties=Placeholder" --from-literal="application-roles.properties=Placeholder" --from-literal="APPNAME=National Parks (Green)" -n ${GUID}-parks-prod && \
 oc create configmap nationalparks-blue-config  --from-literal="application-users.properties=Placeholder" --from-literal="application-roles.properties=Placeholder" --from-literal="APPNAME=National Parks (Blue)"  -n ${GUID}-parks-prod && \

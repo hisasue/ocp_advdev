@@ -138,7 +138,7 @@ podTemplate(
 
         echo "Switching Production application to ${destApp}."
         sh "oc delete svc ${activeApp} -n ${GUID}-parks-prod"
-        sh "oc expose dc ${destApp} --port 8080 -l type=parksmap-backend -n ${GUID}-parks-prod"
+        sh "oc label svc ${destApp} type=parksmap-backend -n ${GUID}-parks-prod"
         sh "oc patch route ${appName} -n ${GUID}-parks-prod -p '{\"spec\":{\"to\":{\"name\":\"" + destApp + "\"}}}\'"
       }
     }

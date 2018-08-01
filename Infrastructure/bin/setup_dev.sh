@@ -107,7 +107,7 @@ oc new-app ${GUID}-parks-dev/mlbparks:0.0-0 --name=mlbparks --allow-missing-imag
 for i in `seq 1 10`
 do
  echo "Checking if dc/mlbparks is ready..."
- oc get dc mlbparks -n ${GUID}-parks-prod
+ oc get dc mlbparks -n ${GUID}-parks-dev
  [[ "$?" == "1" ]] || break
  echo "...no. Sleeping 10 seconds."
  sleep 10
@@ -130,7 +130,7 @@ oc new-app ${GUID}-parks-dev/nationalparks:0.0-0 --name=nationalparks --allow-mi
 for i in `seq 1 10`
 do
  echo "Checking if dc/nationalparks is ready..."
- oc get dc nationalparks -n ${GUID}-parks-prod
+ oc get dc nationalparks -n ${GUID}-parks-dev
  [[ "$?" == "1" ]] || break
  echo "...no. Sleeping 10 seconds."
  sleep 10
@@ -153,7 +153,7 @@ oc new-app ${GUID}-parks-dev/parksmap:0.0-0 --name=parksmap --allow-missing-imag
 for i in `seq 1 10`
 do
  echo "Checking if dc/parksmap is ready..."
- oc get dc parksmap -n ${GUID}-parks-prod
+ oc get dc parksmap -n ${GUID}-parks-dev
  [[ "$?" == "1" ]] || break
  echo "...no. Sleeping 10 seconds."
  sleep 10

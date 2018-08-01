@@ -137,8 +137,8 @@ podTemplate(
         //input "Switch Production?"
 
         echo "Switching Production application to ${destApp}."
-        sh "oc delete svc ${appName}"
-        sh "oc expose dc ${destApp} -l type=parksmap-backend"
+        sh "oc delete svc ${appName} -n ${GUID}-parks-prod"
+        sh "oc expose dc ${destApp} -l type=parksmap-backend -n ${GUID}-parks-prod"
         sh "oc patch route ${appName} -n ${GUID}-parks-prod -p '{\"spec\":{\"to\":{\"name\":\"" + destApp + "\"}}}\'"
       }
     }

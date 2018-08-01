@@ -102,9 +102,8 @@ oc policy add-role-to-user admin system:serviceaccount:gpte-jenkins:jenkins -n $
 oc policy add-role-to-group system:image-puller system:serviceaccounts:${GUID}-parks-prod -n ${GUID}-parks-prod
 
 # MLBParks
-oc new-build --binary=true --name="mlbparks" jboss-eap70-openshift:1.7 -n ${GUID}-parks-prod
-#oc patch bc mlbparks -p '{"spec":{"resources":{"requests":{"cpu": 1,"memory": "2Gi"}}}}' -n ${GUID}-parks-prod && \
-oc new-app ${GUID}-parks-prod/mlbparks:0.0-0 --name=mlbparks-green --allow-missing-imagestream-tags=true -n ${GUID}-parks-prod
+oc new-build --binary=true --name="mlbparks" jboss-eap70-openshift:1.7 -n ${GUID}-parks-prod && \
+oc new-app ${GUID}-parks-prod/mlbparks:0.0-0 --name=mlbparks-green --allow-missing-imagestream-tags=true -n ${GUID}-parks-prod && \
 oc new-app ${GUID}-parks-prod/mlbparks:0.0-0 --name=mlbparks-blue  --allow-missing-imagestream-tags=true -n ${GUID}-parks-prod 
 
 for i in `seq 1 10`
@@ -136,9 +135,8 @@ oc set volume dc/mlbparks-blue  --add --name=jboss-config1-blue --mount-path=/op
 
 
 # nationalparks
-oc new-build --binary=true --name="nationalparks" redhat-openjdk18-openshift:1.2 -n ${GUID}-parks-prod
-#oc patch bc nationalparks -p '{"spec":{"resources":{"requests":{"cpu": 1,"memory": "2Gi"}}}}' -n ${GUID}-parks-prod
-oc new-app ${GUID}-parks-prod/nationalparks:0.0-0 --name=nationalparks-green --allow-missing-imagestream-tags=true -n ${GUID}-parks-prod
+oc new-build --binary=true --name="nationalparks" redhat-openjdk18-openshift:1.2 -n ${GUID}-parks-prod && \
+oc new-app ${GUID}-parks-prod/nationalparks:0.0-0 --name=nationalparks-green --allow-missing-imagestream-tags=true -n ${GUID}-parks-prod && \
 oc new-app ${GUID}-parks-prod/nationalparks:0.0-0 --name=nationalparks-blue  --allow-missing-imagestream-tags=true -n ${GUID}-parks-prod
 
 for i in `seq 1 10`
@@ -169,9 +167,8 @@ oc set volume dc/nationalparks-blue  --add --name=jboss-config1-blue --mount-pat
 # parksmap
 oc policy add-role-to-user view --serviceaccount=default -n ${GUID}-parks-prod && \
 oc new-build --binary=true --name="parksmap" redhat-openjdk18-openshift:1.2 -n ${GUID}-parks-prod && \
-#oc patch bc parksmap -p '{"spec":{"resources":{"requests":{"cpu": 1,"memory": "2Gi"}}}}' -n ${GUID}-parks-prod && \
 oc new-app ${GUID}-parks-prod/parksmap:0.0-0 --name=parksmap-green --allow-missing-imagestream-tags=true -n ${GUID}-parks-prod && \
-oc new-app ${GUID}-parks-prod/parksmap:0.0-0 --name=parksmap-blue  --allow-missing-imagestream-tags=true -n ${GUID}-parks-prod && \
+oc new-app ${GUID}-parks-prod/parksmap:0.0-0 --name=parksmap-blue  --allow-missing-imagestream-tags=true -n ${GUID}-parks-prod
 
 for i in `seq 1 10`
 do

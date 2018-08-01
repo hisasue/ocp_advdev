@@ -106,7 +106,6 @@ oc new-app ${GUID}-parks-dev/mlbparks:0.0-0 --name=mlbparks --allow-missing-imag
 oc set triggers dc/mlbparks --remove-all -n ${GUID}-parks-dev
 oc set probe dc/mlbparks --liveness  --failure-threshold 3 --initial-delay-seconds 60 -- echo ok -n ${GUID}-parks-dev
 oc set probe dc/mlbparks --readiness --failure-threshold 3 --initial-delay-seconds 60 -- echo ok -n ${GUID}-parks-dev
-#oc set probe dc/mlbparks --readiness --failure-threshold 3 --initial-delay-seconds 60 --get-url=http://:8081/ws/healthz/ -n ${GUID}-parks-dev
 oc expose dc mlbparks --port 8080 -n ${GUID}-parks-dev
 oc expose svc mlbparks -n ${GUID}-parks-dev
 oc create configmap mlbparks-config --from-literal="application-users.properties=Placeholder" --from-literal="application-roles.properties=Placeholder" --from-literal="APPNAME=MLB Parks (Dev)" -n ${GUID}-parks-dev
@@ -120,7 +119,6 @@ oc new-app ${GUID}-parks-dev/nationalparks:0.0-0 --name=nationalparks --allow-mi
 oc set triggers dc/nationalparks --remove-all -n ${GUID}-parks-dev
 oc set probe dc/nationalparks --liveness  --failure-threshold 3 --initial-delay-seconds 60 -- echo ok -n ${GUID}-parks-dev
 oc set probe dc/nationalparks --readiness --failure-threshold 3 --initial-delay-seconds 60 -- echo ok -n ${GUID}-parks-dev
-#oc set probe dc/nationalparks --readiness --failure-threshold 3 --initial-delay-seconds 60 --get-url=http://:8081/ws/healthz/ -n ${GUID}-parks-dev
 oc expose dc nationalparks --port 8080 -n ${GUID}-parks-dev
 oc expose svc nationalparks -n ${GUID}-parks-dev
 oc create configmap nationalparks-config --from-literal="application-users.properties=Placeholder" --from-literal="application-roles.properties=Placeholder" --from-literal="APPNAME=National Parks (Dev)" -n ${GUID}-parks-dev
@@ -134,7 +132,6 @@ oc new-app ${GUID}-parks-dev/parksmap:0.0-0 --name=parksmap --allow-missing-imag
 oc set triggers dc/parksmap --remove-all -n ${GUID}-parks-dev
 oc set probe dc/parksmap --liveness  --failure-threshold 3 --initial-delay-seconds 60 -- echo ok -n ${GUID}-parks-dev
 oc set probe dc/parksmap --readiness --failure-threshold 3 --initial-delay-seconds 60 -- echo ok -n ${GUID}-parks-dev
-#oc set probe dc/parksmap --readiness --failure-threshold 3 --initial-delay-seconds 60 --get-url=http://:8081/ws/healthz/ -n ${GUID}-parks-dev
 oc expose dc parksmap --port 8080 -n ${GUID}-parks-dev
 oc expose svc parksmap -n ${GUID}-parks-dev
 oc create configmap parksmap-config --from-literal="application-users.properties=Placeholder" --from-literal="application-roles.properties=Placeholder" --from-literal="APPNAME=ParksMap (Dev)" -n ${GUID}-parks-dev

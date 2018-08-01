@@ -112,7 +112,6 @@ oc set probe dc/mlbparks-green --liveness  --failure-threshold 3 --initial-delay
 oc set probe dc/mlbparks-green --readiness --failure-threshold 3 --initial-delay-seconds 60 -- echo ok -n ${GUID}-parks-prod
 oc set probe dc/mlbparks-blue  --liveness  --failure-threshold 3 --initial-delay-seconds 60 -- echo ok -n ${GUID}-parks-prod
 oc set probe dc/mlbparks-blue  --readiness --failure-threshold 3 --initial-delay-seconds 60 -- echo ok -n ${GUID}-parks-prod
-#oc set probe dc/mlbparks --readiness --failure-threshold 3 --initial-delay-seconds 60 --get-url=http://:8081/ws/healthz/ -n ${GUID}-parks-prod
 oc expose dc mlbparks-green --port 8080 -n ${GUID}-parks-prod
 oc expose dc mlbparks-blue  --port 8080 -n ${GUID}-parks-prod
 oc expose svc mlbparks-green --name mlbparks -n ${GUID}-parks-prod
@@ -136,7 +135,6 @@ oc set probe dc/nationalparks-green --liveness  --failure-threshold 3 --initial-
 oc set probe dc/nationalparks-green --readiness --failure-threshold 3 --initial-delay-seconds 60 -- echo ok -n ${GUID}-parks-prod
 oc set probe dc/nationalparks-blue  --liveness  --failure-threshold 3 --initial-delay-seconds 60 -- echo ok -n ${GUID}-parks-prod
 oc set probe dc/nationalparks-blue  --readiness --failure-threshold 3 --initial-delay-seconds 60 -- echo ok -n ${GUID}-parks-prod
-#oc set probe dc/nationalparks --readiness --failure-threshold 3 --initial-delay-seconds 60 --get-url=http://:8081/ws/healthz/ -n ${GUID}-parks-prod
 oc expose dc nationalparks-green --port 8080 -n ${GUID}-parks-prod
 oc expose dc nationalparks-blue  --port 8080 -n ${GUID}-parks-prod
 oc expose svc nationalparks-green --name nationalparks -n ${GUID}-parks-prod
@@ -158,7 +156,6 @@ oc set probe dc/parksmap-green --liveness  --failure-threshold 3 --initial-delay
 oc set probe dc/parksmap-green --readiness --failure-threshold 3 --initial-delay-seconds 60 -- echo ok -n ${GUID}-parks-prod
 oc set probe dc/parksmap-blue  --liveness  --failure-threshold 3 --initial-delay-seconds 60 -- echo ok -n ${GUID}-parks-prod
 oc set probe dc/parksmap-blue  --readiness --failure-threshold 3 --initial-delay-seconds 60 -- echo ok -n ${GUID}-parks-prod
-#oc set probe dc/parksmap --readiness --failure-threshold 3 --initial-delay-seconds 60 --get-url=http://:8081/ws/healthz/ -n ${GUID}-parks-prod
 oc expose dc parksmap-green --port 8080 -n ${GUID}-parks-prod
 oc expose dc parksmap-blue  --port 8080 -n ${GUID}-parks-prod
 oc expose svc parksmap-green --name parksmap -n ${GUID}-parks-prod

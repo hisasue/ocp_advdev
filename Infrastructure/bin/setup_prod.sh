@@ -104,8 +104,8 @@ oc policy add-role-to-group system:image-puller system:serviceaccounts:${GUID}-p
 # MLBParks
 oc new-build --binary=true --name="mlbparks" jboss-eap70-openshift:1.7 -n ${GUID}-parks-prod && \
 #oc patch bc mlbparks -p '{"spec":{"resources":{"requests":{"cpu": 1,"memory": "2Gi"}}}}' -n ${GUID}-parks-prod && \
-oc new-app ${GUID}-parks-prod/mlbparks:0.0-0 --name=mlbparks-green --allow-missing-imagestream-tags=true -l type=parksmap-backend -n ${GUID}-parks-prod && \
-oc new-app ${GUID}-parks-prod/mlbparks:0.0-0 --name=mlbparks-blue  --allow-missing-imagestream-tags=true -l type=parksmap-backend -n ${GUID}-parks-prod && \
+oc new-app ${GUID}-parks-prod/mlbparks:0.0-0 --name=mlbparks-green --allow-missing-imagestream-tags=true -n ${GUID}-parks-prod && \
+oc new-app ${GUID}-parks-prod/mlbparks:0.0-0 --name=mlbparks-blue  --allow-missing-imagestream-tags=true -n ${GUID}-parks-prod && \
 sleep 10 && \
 oc set triggers dc/mlbparks-green --remove-all -n ${GUID}-parks-prod && \
 oc set triggers dc/mlbparks-blue  --remove-all -n ${GUID}-parks-prod && \
@@ -114,7 +114,7 @@ oc set probe dc/mlbparks-green --readiness --failure-threshold 3 --initial-delay
 oc set probe dc/mlbparks-blue  --liveness  --failure-threshold 3 --initial-delay-seconds 60 -- echo ok -n ${GUID}-parks-prod && \
 oc set probe dc/mlbparks-blue  --readiness --failure-threshold 3 --initial-delay-seconds 60 -- echo ok -n ${GUID}-parks-prod && \
 oc expose dc mlbparks-green --port 8080 -n ${GUID}-parks-prod && \
-oc expose dc mlbparks-blue  --port 8080 -n ${GUID}-parks-prod && \
+oc expose dc mlbparks-blue  --port 8080 -l type=parksmap-backend -n ${GUID}-parks-prod && \
 oc expose svc mlbparks-green --name mlbparks -n ${GUID}-parks-prod && \
 oc create configmap mlbparks-green-config --from-literal="application-users.properties=Placeholder" --from-literal="application-roles.properties=Placeholder" --from-literal="APPNAME=MLB Parks (Green)" -n ${GUID}-parks-prod && \
 oc create configmap mlbparks-blue-config  --from-literal="application-users.properties=Placeholder" --from-literal="application-roles.properties=Placeholder" --from-literal="APPNAME=MLB Parks (Blue)"  -n ${GUID}-parks-prod && \
@@ -129,8 +129,8 @@ oc set volume dc/mlbparks-blue  --add --name=jboss-config1-blue --mount-path=/op
 # nationalparks
 oc new-build --binary=true --name="nationalparks" redhat-openjdk18-openshift:1.2 -n ${GUID}-parks-prod && \
 #oc patch bc nationalparks -p '{"spec":{"resources":{"requests":{"cpu": 1,"memory": "2Gi"}}}}' -n ${GUID}-parks-prod && \
-oc new-app ${GUID}-parks-prod/nationalparks:0.0-0 --name=nationalparks-green --allow-missing-imagestream-tags=true -l type=parksmap-backend -n ${GUID}-parks-prod && \
-oc new-app ${GUID}-parks-prod/nationalparks:0.0-0 --name=nationalparks-blue  --allow-missing-imagestream-tags=true -l type=parksmap-backend -n ${GUID}-parks-prod && \
+oc new-app ${GUID}-parks-prod/nationalparks:0.0-0 --name=nationalparks-green --allow-missing-imagestream-tags=true -n ${GUID}-parks-prod && \
+oc new-app ${GUID}-parks-prod/nationalparks:0.0-0 --name=nationalparks-blue  --allow-missing-imagestream-tags=true -n ${GUID}-parks-prod && \
 sleep 10 && \
 oc set triggers dc/nationalparks-green  --remove-all -n ${GUID}-parks-prod && \
 oc set triggers dc/nationalparks-blue  --remove-all -n ${GUID}-parks-prod && \
@@ -138,7 +138,7 @@ oc set probe dc/nationalparks-green --liveness  --failure-threshold 3 --initial-
 oc set probe dc/nationalparks-green --readiness --failure-threshold 3 --initial-delay-seconds 60 -- echo ok -n ${GUID}-parks-prod && \
 oc set probe dc/nationalparks-blue  --liveness  --failure-threshold 3 --initial-delay-seconds 60 -- echo ok -n ${GUID}-parks-prod && \
 oc set probe dc/nationalparks-blue  --readiness --failure-threshold 3 --initial-delay-seconds 60 -- echo ok -n ${GUID}-parks-prod && \
-oc expose dc nationalparks-green --port 8080 -n ${GUID}-parks-prod && \
+oc expose dc nationalparks-green --port 8080 -l type=parksmap-backend -n ${GUID}-parks-prod && \
 oc expose dc nationalparks-blue  --port 8080 -n ${GUID}-parks-prod && \
 oc expose svc nationalparks-green --name nationalparks -n ${GUID}-parks-prod && \
 oc create configmap nationalparks-green-config --from-literal="application-users.properties=Placeholder" --from-literal="application-roles.properties=Placeholder" --from-literal="APPNAME=National Parks (Green)" -n ${GUID}-parks-prod && \

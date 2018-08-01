@@ -123,6 +123,8 @@ podTemplate(
         sh "oc set image dc/${destApp} ${destApp}=docker-registry.default.svc:5000/${GUID}-parks-prod/${appName}:${prodTag} -n ${GUID}-parks-prod"
         sh "oc set env dc/${destApp} APPNAME=\"${appname_prod}\" -n ${GUID}-parks-prod"
         //sh "oc set probe dc/${destApp} --readiness --failure-threshold 3 --initial-delay-seconds 60 --get-url=http://:8080/ws/healthz/ -n ${GUID}-parks-prod"
+        sh "oc delete svc ${appName}"
+        sh "oc expose dc ${destApp} --name ${appName} -l type=parksmap-backend"
 
         //sh "oc delete configmap ${destApp}-config -n ${GUID}-parks-prod --ignore-not-found=true"
         //sh "oc create configmap ${destApp}-config --from-file=./configuration/application-users.properties --from-file=./configuration/application-roles.properties -n ${GUID}-parks-prod"

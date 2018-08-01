@@ -82,10 +82,6 @@ podTemplate(
         sh "oc set env dc/${appName} APPNAME='${appNameDev}' DB_HOST=mongodb DB_PORT=27017 DB_USERNAME=mongodb DB_PASSWORD=mongodb DB_NAME=parks DB_REPLICASET=rs0 -n ${GUID}-parks-dev" 
         sh "oc set probe dc/${appName} --readiness --failure-threshold 3 --initial-delay-seconds 60 --get-url=http://:8080/ws/healthz/ -n ${GUID}-parks-dev"
         
-        // Update the Config Map which contains the users for the Tasks application
-        //sh "oc delete configmap mlbparks-config -n ${GUID}-parks-dev --ignore-not-found=true"
-        //sh "oc create configmap mlbparks-config --from-file=./configuration/application-users.properties --from-file=./configuration/application-roles.properties -n ${GUID}-parks-dev"
-        
         // Deploy the development application.
         openshiftDeploy depCfg: appName, namespace: "${GUID}-parks-dev", verbose: 'false', waitTime: '', waitUnit: 'sec'
         openshiftVerifyDeployment depCfg: appName, namespace: "${GUID}-parks-dev", replicaCount: '1', verbose: 'false', verifyReplicaCount: 'false', waitTime: '', waitUnit: 'sec'

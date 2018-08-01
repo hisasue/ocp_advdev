@@ -34,7 +34,7 @@ oc new-app jenkins-persistent --param ENABLE_OAUTH=true --param MEMORY_LIMIT=2Gi
 #yum install -y docker
 #cd $DIR/../templates/jenkins-slave-appdev/
 oc new-build --name=jenkins-slave-maven-appdev --dockerfile=$'FROM docker.io/openshift/jenkins-slave-maven-centos7:v3.9\nUSER root\nRUN yum -y install skopeo apb && yum clean all\nUSER 1001' && \
-  oc tag jenkins-slave-maven-appdev:latest jenkins-slave-appdev:v3.9
+  oc tag jenkins-slave-maven-appdev:latest jenkins-slave-maven-appdev:v3.9
 #cd ./Infrastructure/templates/jenkins-slave-appdev/
 #docker build . -t docker-registry-default.apps.na39.openshift.opentlc.com/${GUID}-jenkins/jenkins-slave-maven-appdev:v3.9
 #docker login -u thisasue-redhat.com -p $(oc whoami -t) docker-registry-default.apps.na39.openshift.opentlc.com

@@ -13,7 +13,7 @@ oc new-app docker.io/sonatype/nexus3:latest -n $GUID-nexus
 oc expose svc nexus3 -n $GUID-nexus
 oc rollout pause dc nexus3 -n $GUID-nexus
 oc patch dc nexus3 --patch='{ "spec": { "strategy": { "type": "Recreate" }}}' -n $GUID-nexus
-oc set resources dc nexus3 --limits=memory=2Gi --requests=memory=1Gi -n $GUID-nexus
+oc set resources dc nexus3 --limits=memory=2Gi --requests=memory=2Gi,cpu=1 -n $GUID-nexus
 echo "apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:

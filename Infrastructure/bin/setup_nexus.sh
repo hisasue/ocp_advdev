@@ -26,8 +26,6 @@ spec:
       storage: 4Gi" | oc create -f - -n $GUID-nexus
 
 oc set volume dc/nexus3 --add --overwrite --name=nexus3-volume-1 --mount-path=/nexus-data/ --type persistentVolumeClaim --claim-name=nexus-pvc -n $GUID-nexus
-oc set probe dc/nexus3 --liveness --failure-threshold 3 --initial-delay-seconds 60 -- echo ok -n $GUID-nexus
-oc set probe dc/nexus3 --readiness --failure-threshold 3 --initial-delay-seconds 60 --get-url=http://:8081/repository/maven-public/ -n $GUID-nexus
 oc rollout resume dc nexus3 -n $GUID-nexus
 
 # Code to set up the Nexus. It will need to
@@ -58,3 +56,6 @@ rm setup_nexus3.sh
 
 oc expose dc nexus3 --port=5000 --name=nexus-registry -n $GUID-nexus
 oc create route edge nexus-registry --service=nexus-registry --port=5000 -n $GUID-nexus
+
+oc set probe dc/nexus3 --liveness --failure-threshold 3 --initial-delay-seconds 60 -- echo ok -n $GUID-nexus
+oc set probe dc/nexus3 --readiness --failure-threshold 3 --initial-delay-seconds 60 --get-url=http://:8081/repository/maven-public/ -n $GUID-nexus

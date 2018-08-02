@@ -58,7 +58,7 @@ oc process -f ./Infrastructure/templates/bc-app.yaml \
  
  while : ; do
    echo "Checking if Jenkins is Ready..."
-   oc get pod -n ${GUID}-jenkins|grep -v slave|grep "1/1"
+   oc get pod -n ${GUID}-jenkins|grep -v slave|grep -v deploy|grep "1/1"
    [[ "$?" == "1" ]] || break
    echo "...no. Sleeping 10 seconds."
    sleep 10

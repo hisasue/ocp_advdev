@@ -22,10 +22,16 @@ objects:
           RUN yum -y install skopeo apb && yum clean all
           USER 1001
         type: Dockerfile
+      output:
+        to:
+          kind: "DockerImage"
+          name: "docker-registry.default.svc.cluster.local:5000/${GUID}-jenkins/jenkins-slave-maven-appdev:v3.9"
       strategy:
         dockerStrategy:
-          from:
-            kind: "ImageStreamTag"
-            name: "jenkins-slave-maven-appdev:v3.9"
-            #name: "nexus-registry-80ff-nexus.apps.na39.openshift.opentlc.comm/80ff-jenkins/jenkins-slave-maven-appdev:v3.9"
+          nocache: true
+#          from:
+#            kind: "ImageStreamTag"
+#            name: "jenkins-slave-maven-centos7:v3.9"
+#            name: "jenkins-slave-maven-appdev:v3.9"
+#            #name: "nexus-registry-80ff-nexus.apps.na39.openshift.opentlc.comm/80ff-jenkins/jenkins-slave-maven-appdev:v3.9"
 

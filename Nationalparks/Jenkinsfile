@@ -120,7 +120,7 @@ podTemplate(
         // Update the Image on the Production Deployment Config
         sh "oc set image dc/${destApp} ${destApp}=docker-registry.default.svc:5000/${GUID}-parks-prod/${appName}:${prodTag} -n ${GUID}-parks-prod"
         sh "oc set env dc/${destApp} APPNAME=\"${appname_prod}\" DB_HOST=mongodb DB_PORT=27017 DB_USERNAME=mongodb DB_PASSWORD=mongodb DB_NAME=parks DB_REPLICASET=rs0 -n ${GUID}-parks-prod"
-        sh "oc set probe dc/${destApp} --liveness  --failure-threshold 3 --initial-delay-seconds 60 -n ${GUID}-parks-dev" -- echo ok
+        sh "oc set probe dc/${destApp} --liveness  --failure-threshold 3 --initial-delay-seconds 60 -n ${GUID}-parks-prod" -- echo ok
         sh "oc set probe dc/${destApp} --readiness --failure-threshold 3 --initial-delay-seconds 60 -n ${GUID}-parks-prod" --get-url=http://:8080/ws/healthz/
 
         //sh "oc delete configmap ${destApp}-config -n ${GUID}-parks-prod --ignore-not-found=true"

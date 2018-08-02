@@ -30,7 +30,6 @@ echo "Setting up Jenkins in project ${GUID}-jenkins from Git Repo ${REPO} for Cl
 cd $(dirname $0)/../..
 oc policy add-role-to-user admin system:serviceaccount:gpte-jenkins:jenkins -n ${GUID}-jenkins
 oc new-app jenkins-persistent --param ENABLE_OAUTH=true --param MEMORY_LIMIT=2Gi --param VOLUME_CAPACITY=4Gi -e GUID=${GUID} -e REPO=${REPO} -e CLUSTER=${CLUSTER} -n ${GUID}-jenkins
-sleep 180
 #yum install -y docker
 #cd $DIR/../templates/jenkins-slave-appdev/
 #oc new-build --name=jenkins-slave-maven-centos --dockerfile=$'FROM docker.io/openshift/jenkins-slave-maven-centos7:v3.9\nUSER root\nRUN yum -y install skopeo apb && yum clean all\nUSER 1001' -n ${GUID}-jenkins && \
@@ -56,3 +55,11 @@ oc process -f ./Infrastructure/templates/bc-app.yaml \
   -p CLUSTER=${CLUSTER} \
   -n ${GUID}-jenkins \
   | oc create -f -
+ 
+ while : ; do
+   echo "Checking if Jenkins is Ready..."
+   oc get pod -n ${GUID}-jenkins|grep '\-2\-'|grep -v deploy|grep "1/1"
+   [[ "$?" == "1" ]] || break
+   echo "...no. Sleeping 10 seconds."
+   sleep 10
+ done

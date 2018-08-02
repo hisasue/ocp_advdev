@@ -105,16 +105,6 @@ oc policy add-role-to-group system:image-puller system:serviceaccounts:${GUID}-p
 oc new-build --binary=true --name="mlbparks" jboss-eap70-openshift:1.7 -n ${GUID}-parks-prod && \
 oc new-app ${GUID}-parks-prod/mlbparks:0.0-0 --name=mlbparks-green --allow-missing-imagestream-tags=true -n ${GUID}-parks-prod && \
 oc new-app ${GUID}-parks-prod/mlbparks:0.0-0 --name=mlbparks-blue  --allow-missing-imagestream-tags=true -n ${GUID}-parks-prod 
-
-for i in `seq 1 10`
-do
- echo "Checking if dc/mlbparks is ready..."
- oc get dc mlbparks -n ${GUID}-parks-prod
- [[ "$?" == "1" ]] || break
- echo "...no. Sleeping 10 seconds."
- sleep 10
-done
-
 oc set triggers dc/mlbparks-green --remove-all -n ${GUID}-parks-prod && \
 oc set triggers dc/mlbparks-blue  --remove-all -n ${GUID}-parks-prod && \
 oc expose dc mlbparks-green --port 8080 -l type=parksmap-backend -n ${GUID}-parks-prod && \
@@ -134,17 +124,6 @@ oc set volume dc/mlbparks-blue  --add --name=jboss-config1-blue --mount-path=/op
 oc new-build --binary=true --name="nationalparks" redhat-openjdk18-openshift:1.2 -n ${GUID}-parks-prod && \
 oc new-app ${GUID}-parks-prod/nationalparks:0.0-0 --name=nationalparks-green --allow-missing-imagestream-tags=true -n ${GUID}-parks-prod && \
 oc new-app ${GUID}-parks-prod/nationalparks:0.0-0 --name=nationalparks-blue  --allow-missing-imagestream-tags=true -n ${GUID}-parks-prod
-
-for i in `seq 1 10`
-do
- echo "Checking if dc/nationalparks is ready..."
- oc get dc nationalparks -n ${GUID}-parks-prod
- [[ "$?" == "1" ]] || break
- echo "...no. Sleeping 10 seconds."
- sleep 10
-done
-
-oc set triggers dc/nationalparks-green  --remove-all -n ${GUID}-parks-prod && \
 oc set triggers dc/nationalparks-blue  --remove-all -n ${GUID}-parks-prod && \
 oc expose dc nationalparks-green --port 8080 -l type=parksmap-backend -n ${GUID}-parks-prod && \
 #oc expose dc nationalparks-blue  --port 8080 -n ${GUID}-parks-prod && \
@@ -161,16 +140,6 @@ oc policy add-role-to-user view --serviceaccount=default -n ${GUID}-parks-prod &
 oc new-build --binary=true --name="parksmap" redhat-openjdk18-openshift:1.2 -n ${GUID}-parks-prod && \
 oc new-app ${GUID}-parks-prod/parksmap:0.0-0 --name=parksmap-green --allow-missing-imagestream-tags=true -n ${GUID}-parks-prod && \
 oc new-app ${GUID}-parks-prod/parksmap:0.0-0 --name=parksmap-blue  --allow-missing-imagestream-tags=true -n ${GUID}-parks-prod
-
-for i in `seq 1 10`
-do
- echo "Checking if dc/parksmap is ready..."
- oc get dc parksmap -n ${GUID}-parks-prod
- [[ "$?" == "1" ]] || break
- echo "...no. Sleeping 10 seconds."
- sleep 10
-done
-
 oc set triggers dc/parksmap-green  --remove-all -n ${GUID}-parks-prod && \
 oc set triggers dc/parksmap-blue  --remove-all -n ${GUID}-parks-prod && \
 oc expose dc parksmap-green --port 8080 -n ${GUID}-parks-prod && \

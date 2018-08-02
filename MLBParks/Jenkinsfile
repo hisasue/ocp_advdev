@@ -80,8 +80,8 @@ podTemplate(
         // Update the Image on the Development Deployment Config
         sh "oc set image dc/${appName} ${appName}=docker-registry.default.svc:5000/${GUID}-parks-dev/${appName}:${devTag} -n ${GUID}-parks-dev"
         sh "oc set env dc/${appName} APPNAME='${appNameDev}' DB_HOST=mongodb DB_PORT=27017 DB_USERNAME=mongodb DB_PASSWORD=mongodb DB_NAME=parks DB_REPLICASET=rs0 -n ${GUID}-parks-dev" 
-        sh "oc set probe dc/${appName} --liveness  --failure-threshold 3 --initial-delay-seconds 60 -- echo ok -n ${GUID}-parks-dev"
-        sh "oc set probe dc/${appName} --readiness --failure-threshold 3 --initial-delay-seconds 60 --get-url=http://:8080/ws/healthz/ -n ${GUID}-parks-dev"
+        sh "oc set probe dc/${appName} --liveness  --failure-threshold 3 --initial-delay-seconds 60 -n ${GUID}-parks-dev -- echo ok"
+        sh "oc set probe dc/${appName} --readiness --failure-threshold 3 --initial-delay-seconds 60 -n ${GUID}-parks-dev --get-url=http://:8080/ws/healthz/"
         
         // Deploy the development application.
         openshiftDeploy depCfg: appName, namespace: "${GUID}-parks-dev", verbose: 'false', waitTime: '', waitUnit: 'sec'
@@ -119,8 +119,8 @@ podTemplate(
         // Update the Image on the Production Deployment Config
         sh "oc set image dc/${destApp} ${destApp}=docker-registry.default.svc:5000/${GUID}-parks-prod/${appName}:${prodTag} -n ${GUID}-parks-prod"
         sh "oc set env dc/${destApp} APPNAME=\"${appname_prod}\" DB_HOST=mongodb DB_PORT=27017 DB_USERNAME=mongodb DB_PASSWORD=mongodb DB_NAME=parks DB_REPLICASET=rs0 -n ${GUID}-parks-prod"
-        sh "oc set probe dc/${destApp} --liveness  --failure-threshold 3 --initial-delay-seconds 60 -- echo ok -n ${GUID}-parks-dev"
-        sh "oc set probe dc/${destApp} --readiness --failure-threshold 3 --initial-delay-seconds 60 --get-url=http://:8080/ws/healthz/ -n ${GUID}-parks-prod"
+        sh "oc set probe dc/${destApp} --liveness  --failure-threshold 3 --initial-delay-seconds 60 -n ${GUID}-parks-dev -- echo ok"
+        sh "oc set probe dc/${destApp} --readiness --failure-threshold 3 --initial-delay-seconds 60 -n ${GUID}-parks-prod --get-url=http://:8080/ws/healthz/"
 
         //sh "oc delete configmap ${destApp}-config -n ${GUID}-parks-prod --ignore-not-found=true"
         //sh "oc create configmap ${destApp}-config --from-file=./configuration/application-users.properties --from-file=./configuration/application-roles.properties -n ${GUID}-parks-prod"

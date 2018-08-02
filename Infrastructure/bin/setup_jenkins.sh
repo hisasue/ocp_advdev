@@ -54,7 +54,7 @@ oc process -f ./Infrastructure/templates/bc-app.yaml \
   -p REPO=${REPO} \
   -p CLUSTER=${CLUSTER} \
   -n ${GUID}-jenkins \
-  | oc create -f -
+  | oc create -n ${GUID}-jenkins -f -
  
  while : ; do
    echo "Checking if Jenkins is Ready..."

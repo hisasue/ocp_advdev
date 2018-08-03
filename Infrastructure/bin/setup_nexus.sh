@@ -43,7 +43,7 @@ oc set probe dc/nexus3 --readiness --failure-threshold 3 --initial-delay-seconds
 sleep 5
 while : ; do
  echo "Checking if Nexus is Ready..."
- oc get pod -n ${GUID}-nexus|grep -v deploy|grep "1/1.*Running"
+ oc get pod -n ${GUID}-nexus|grep -e "-[0-9]\+-"|grep -v deploy|grep -e "1/1\s*Running"
  [[ "$?" == "1" ]] || break
  echo "...no. Sleeping 10 seconds."
  sleep 10

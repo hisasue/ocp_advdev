@@ -8,6 +8,7 @@ if [ "$#" -ne 2 ]; then
 fi
 
 echo "Waiting for ${1} pod ready in ${2}"
+sleep 5
 
 while : ; do
  echo "Checking if ${1} is Ready..."

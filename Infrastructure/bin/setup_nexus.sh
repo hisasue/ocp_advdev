@@ -38,13 +38,8 @@ oc set probe dc/nexus3 --readiness --failure-threshold 3 --initial-delay-seconds
 # Hint: Make sure to wait until Nexus if fully up and running
 #       before configuring nexus with repositories.
 #       You could use the following code:
- while : ; do
-   echo "Checking if Nexus is Ready..."
-   oc get pod -n ${GUID}-nexus|grep '\-2\-'|grep -v deploy|grep "1/1"
-   [[ "$?" == "1" ]] || break
-   echo "...no. Sleeping 10 seconds."
-   sleep 10
- done
+
+./Infrastructure/bin/waitUntilPodReady.sh Nexus ${GUID}-nexus
 
 # Ideally just calls a template
 # oc new-app -f ../templates/nexus.yaml --param .....

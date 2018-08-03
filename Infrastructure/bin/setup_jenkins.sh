@@ -57,3 +57,5 @@ oc process -f ./Infrastructure/templates/bc-app.yaml \
   | oc create -n ${GUID}-jenkins -f -
  
 ./Infrastructure/bin/waitUntilPodReady.sh jenkins ${GUID}-jenkins
+
+sleep 480

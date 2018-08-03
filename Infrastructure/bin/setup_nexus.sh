@@ -40,20 +40,16 @@ oc set probe dc/nexus3 --readiness --failure-threshold 3 --initial-delay-seconds
 #       You could use the following code:
 
 #./Infrastructure/bin/waitUntilPodReady.sh nexus $GUID-nexus
- while : ; do
-   echo "Checking if Nexus is Ready..."
-   oc get pod -n ${GUID}-nexus|grep -v deploy|grep "1/1"
-   [[ "$?" == "1" ]] || break
-   echo "...no. Sleeping 10 seconds."
-   sleep 10
- done
-# Ideally just calls a template
-# oc new-app -f ../templates/nexus.yaml --param .....
-
-# To be Implemented by Student
-
-./Infrastructure/bin/wkulhanek_setup_nexus3.sh admin admin123 http://$(oc get route nexus3 --template='{{ .spec.host }}' -n $GUID-nexus)
+sleep 5
+while : ; do
+ echo "Checking if Nexus is Ready..."
+ oc get pod -n ${GUID}-nexus|grep -v deploy|grep "1/1.*Running"
+ [[ "$?" == "1" ]] || break
+ echo "...no. Sleeping 10 seconds."
+ sleep 10
+done
 
 oc expose dc nexus3 --port=5000 --name=nexus-registry -n $GUID-nexus
 oc create route edge nexus-registry --service=nexus-registry --port=5000 -n $GUID-nexus
 
+./Infrastructure/bin/wkulhanek_setup_nexus3.sh admin admin123 http://$(oc get route nexus3 --template='{{ .spec.host }}' -n $GUID-nexus)

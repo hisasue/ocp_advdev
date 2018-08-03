@@ -7,7 +7,7 @@ if [ "$#" -ne 2 ]; then
     exit 1
 fi
 
-echo "Waiting for ${1} pod ready in ${0}"
+echo "Waiting for ${1} pod ready in ${2}"
 
 while : ; do
  echo "Checking if ${1} is Ready..."

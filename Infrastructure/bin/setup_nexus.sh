@@ -39,7 +39,7 @@ oc set probe dc/nexus3 --readiness --failure-threshold 3 --initial-delay-seconds
 #       before configuring nexus with repositories.
 #       You could use the following code:
 
-./Infrastructure/bin/waitUntilPodReady.sh Nexus ${GUID}-nexus
+./Infrastructure/bin/waitUntilPodReady.sh nexus $GUID-nexus
 
 # Ideally just calls a template
 # oc new-app -f ../templates/nexus.yaml --param .....

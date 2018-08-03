@@ -56,4 +56,4 @@ oc process -f ./Infrastructure/templates/bc-app.yaml \
   -n ${GUID}-jenkins \
   | oc create -n ${GUID}-jenkins -f -
  
-./Infrastructure/bin/waitUntilPodReady.sh Jenkins ${GUID}-jenkins
+./Infrastructure/bin/waitUntilPodReady.sh jenkins ${GUID}-jenkins

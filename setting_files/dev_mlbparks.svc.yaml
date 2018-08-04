@@ -1,0 +1,26 @@
+apiVersion: v1
+kind: Service
+metadata:
+  creationTimestamp: 2018-08-04T09:37:37Z
+  labels:
+    app: mlbparks
+    type: parksmap-backend
+  name: mlbparks
+  namespace: 3890-parks-dev
+  resourceVersion: "29283230"
+  selfLink: /api/v1/namespaces/3890-parks-dev/services/mlbparks
+  uid: 05cfa959-97ca-11e8-9a19-0220bffb280e
+spec:
+  clusterIP: 172.30.254.25
+  ports:
+  - port: 8080
+    protocol: TCP
+    targetPort: 8080
+  selector:
+    app: mlbparks
+    deploymentconfig: mlbparks
+    type: parksmap-backend
+  sessionAffinity: None
+  type: ClusterIP
+status:
+  loadBalancer: {}

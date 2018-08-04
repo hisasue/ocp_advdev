@@ -1,0 +1,31 @@
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  annotations:
+    openshift.io/host.generated: "true"
+  creationTimestamp: 2018-08-04T09:37:28Z
+  labels:
+    app: nexus3
+  name: nexus3
+  namespace: 3890-nexus
+  resourceVersion: "29282982"
+  selfLink: /apis/route.openshift.io/v1/namespaces/3890-nexus/routes/nexus3
+  uid: 00612ef5-97ca-11e8-9a19-0220bffb280e
+spec:
+  host: nexus3-3890-nexus.apps.na39.openshift.opentlc.com
+  port:
+    targetPort: 8081-tcp
+  to:
+    kind: Service
+    name: nexus3
+    weight: 100
+  wildcardPolicy: None
+status:
+  ingress:
+  - conditions:
+    - lastTransitionTime: 2018-08-04T09:37:28Z
+      status: "True"
+      type: Admitted
+    host: nexus3-3890-nexus.apps.na39.openshift.opentlc.com
+    routerName: router
+    wildcardPolicy: None

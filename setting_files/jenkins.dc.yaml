@@ -1,0 +1,141 @@
+apiVersion: apps.openshift.io/v1
+kind: DeploymentConfig
+metadata:
+  annotations:
+    openshift.io/generated-by: OpenShiftNewApp
+    template.alpha.openshift.io/wait-for-ready: "true"
+  creationTimestamp: 2018-08-04T09:37:25Z
+  generation: 3
+  labels:
+    app: jenkins-persistent
+    template: jenkins-persistent-template
+  name: jenkins
+  namespace: 3890-jenkins
+  resourceVersion: "29284928"
+  selfLink: /apis/apps.openshift.io/v1/namespaces/3890-jenkins/deploymentconfigs/jenkins
+  uid: ff201ee5-97c9-11e8-9a19-0220bffb280e
+spec:
+  replicas: 1
+  revisionHistoryLimit: 10
+  selector:
+    name: jenkins
+  strategy:
+    activeDeadlineSeconds: 21600
+    recreateParams:
+      timeoutSeconds: 600
+    resources: {}
+    type: Recreate
+  template:
+    metadata:
+      annotations:
+        openshift.io/generated-by: OpenShiftNewApp
+      creationTimestamp: null
+      labels:
+        name: jenkins
+    spec:
+      containers:
+      - env:
+        - name: CLUSTER
+          value: na39.openshift.opentlc.com
+        - name: GUID
+          value: "3890"
+        - name: REPO
+          value: https://github.com/hisasue/ocp_advdev
+        - name: OPENSHIFT_ENABLE_OAUTH
+          value: "true"
+        - name: OPENSHIFT_ENABLE_REDIRECT_PROMPT
+          value: "true"
+        - name: KUBERNETES_MASTER
+          value: https://kubernetes.default:443
+        - name: KUBERNETES_TRUST_CERTIFICATES
+          value: "true"
+        - name: JENKINS_SERVICE_NAME
+          value: jenkins
+        - name: JNLP_SERVICE_NAME
+          value: jenkins-jnlp
+        image: registry.access.redhat.com/openshift3/jenkins-2-rhel7@sha256:b0c2a46307fafbc6f28d5b01d0c818b371953faf021e44468acf0e54a42f0aa0
+        imagePullPolicy: IfNotPresent
+        livenessProbe:
+          failureThreshold: 2
+          httpGet:
+            path: /login
+            port: 8080
+            scheme: HTTP
+          initialDelaySeconds: 420
+          periodSeconds: 360
+          successThreshold: 1
+          timeoutSeconds: 240
+        name: jenkins
+        readinessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /login
+            port: 8080
+            scheme: HTTP
+          initialDelaySeconds: 3
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 240
+        resources:
+          limits:
+            cpu: 1500m
+            memory: 3Gi
+          requests:
+            cpu: 1500m
+            memory: 3Gi
+        securityContext:
+          capabilities: {}
+          privileged: false
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+        volumeMounts:
+        - mountPath: /var/lib/jenkins
+          name: jenkins-data
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      serviceAccount: jenkins
+      serviceAccountName: jenkins
+      terminationGracePeriodSeconds: 30
+      volumes:
+      - name: jenkins-data
+        persistentVolumeClaim:
+          claimName: jenkins
+  test: false
+  triggers:
+  - imageChangeParams:
+      automatic: true
+      containerNames:
+      - jenkins
+      from:
+        kind: ImageStreamTag
+        name: jenkins:2
+        namespace: openshift
+      lastTriggeredImage: registry.access.redhat.com/openshift3/jenkins-2-rhel7@sha256:b0c2a46307fafbc6f28d5b01d0c818b371953faf021e44468acf0e54a42f0aa0
+    type: ImageChange
+  - type: ConfigChange
+status:
+  availableReplicas: 1
+  conditions:
+  - lastTransitionTime: 2018-08-04T09:41:15Z
+    lastUpdateTime: 2018-08-04T09:41:15Z
+    message: Deployment config has minimum availability.
+    status: "True"
+    type: Available
+  - lastTransitionTime: 2018-08-04T09:41:18Z
+    lastUpdateTime: 2018-08-04T09:41:18Z
+    message: replication controller "jenkins-2" successfully rolled out
+    reason: NewReplicationControllerAvailable
+    status: "True"
+    type: Progressing
+  details:
+    causes:
+    - type: ConfigChange
+    message: config change
+  latestVersion: 2
+  observedGeneration: 3
+  readyReplicas: 1
+  replicas: 1
+  unavailableReplicas: 0
+  updatedReplicas: 1

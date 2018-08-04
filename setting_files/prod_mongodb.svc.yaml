@@ -1,0 +1,2 @@
+NAME      TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)     AGE
+mongodb   ClusterIP   172.30.108.94   <none>        27017/TCP   2h

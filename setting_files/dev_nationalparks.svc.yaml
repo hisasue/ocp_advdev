@@ -1,0 +1,26 @@
+apiVersion: v1
+kind: Service
+metadata:
+  creationTimestamp: 2018-08-04T09:37:48Z
+  labels:
+    app: nationalparks
+    type: parksmap-backend
+  name: nationalparks
+  namespace: 3890-parks-dev
+  resourceVersion: "29283512"
+  selfLink: /api/v1/namespaces/3890-parks-dev/services/nationalparks
+  uid: 0c6a940e-97ca-11e8-9a19-0220bffb280e
+spec:
+  clusterIP: 172.30.77.103
+  ports:
+  - port: 8080
+    protocol: TCP
+    targetPort: 8080
+  selector:
+    app: nationalparks
+    deploymentconfig: nationalparks
+    type: parksmap-backend
+  sessionAffinity: None
+  type: ClusterIP
+status:
+  loadBalancer: {}

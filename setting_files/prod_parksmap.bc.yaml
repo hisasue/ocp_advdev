@@ -1,0 +1,43 @@
+apiVersion: build.openshift.io/v1
+kind: BuildConfig
+metadata:
+  annotations:
+    openshift.io/generated-by: OpenShiftNewBuild
+  creationTimestamp: 2018-08-04T09:38:06Z
+  labels:
+    build: parksmap
+  name: parksmap
+  namespace: 3890-parks-prod
+  resourceVersion: "29283777"
+  selfLink: /apis/build.openshift.io/v1/namespaces/3890-parks-prod/buildconfigs/parksmap
+  uid: 171d11c5-97ca-11e8-9a19-0220bffb280e
+spec:
+  failedBuildsHistoryLimit: 5
+  nodeSelector: null
+  output:
+    to:
+      kind: ImageStreamTag
+      name: parksmap:latest
+  postCommit: {}
+  resources: {}
+  runPolicy: Serial
+  source:
+    binary: {}
+    type: Binary
+  strategy:
+    sourceStrategy:
+      from:
+        kind: ImageStreamTag
+        name: redhat-openjdk18-openshift:1.2
+        namespace: openshift
+    type: Source
+  successfulBuildsHistoryLimit: 5
+  triggers:
+  - github:
+      secret: D3IDJUmZvkjObRpZHta6
+    type: GitHub
+  - generic:
+      secret: zQ5Kbrb8nIsQfTzL1APB
+    type: Generic
+status:
+  lastVersion: 0

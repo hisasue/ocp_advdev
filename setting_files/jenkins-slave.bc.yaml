@@ -1,0 +1,50 @@
+apiVersion: build.openshift.io/v1
+kind: BuildConfig
+metadata:
+  annotations:
+    openshift.io/generated-by: OpenShiftNewBuild
+  creationTimestamp: 2018-08-04T09:37:30Z
+  labels:
+    build: jenkins-slave-maven-appdev-build
+  name: jenkins-slave-maven-appdev-build
+  namespace: 3890-jenkins
+  resourceVersion: "29283070"
+  selfLink: /apis/build.openshift.io/v1/namespaces/3890-jenkins/buildconfigs/jenkins-slave-maven-appdev-build
+  uid: 01df3771-97ca-11e8-9a19-0220bffb280e
+spec:
+  failedBuildsHistoryLimit: 5
+  nodeSelector: null
+  output:
+    to:
+      kind: ImageStreamTag
+      name: jenkins-slave-maven-appdev:v3.9
+  postCommit: {}
+  resources: {}
+  runPolicy: Serial
+  source:
+    dockerfile: |-
+      FROM docker.io/openshift/jenkins-slave-maven-centos7:v3.9
+      USER root
+      RUN yum -y install skopeo apb && yum clean all
+      USER 1001
+    type: Dockerfile
+  strategy:
+    dockerStrategy:
+      from:
+        kind: ImageStreamTag
+        name: jenkins-slave-maven-centos7:v3.9
+    type: Docker
+  successfulBuildsHistoryLimit: 5
+  triggers:
+  - github:
+      secret: bNjgIbmOBUdTDGW8yRAq
+    type: GitHub
+  - generic:
+      secret: ZAEvDoe-4eKRhtUnRkUm
+    type: Generic
+  - type: ConfigChange
+  - imageChange:
+      lastTriggeredImageID: docker.io/openshift/jenkins-slave-maven-centos7@sha256:4d0b0a6cf06eb78d36b651fd3f41e37fab09af3f0dc36553b72886db0929100d
+    type: ImageChange
+status:
+  lastVersion: 1

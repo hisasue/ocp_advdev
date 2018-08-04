@@ -1,0 +1,27 @@
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    openshift.io/generated-by: OpenShiftNewApp
+  creationTimestamp: 2018-08-04T09:37:26Z
+  labels:
+    app: jenkins-persistent
+    template: jenkins-persistent-template
+  name: jenkins-jnlp
+  namespace: 3890-jenkins
+  resourceVersion: "29282883"
+  selfLink: /api/v1/namespaces/3890-jenkins/services/jenkins-jnlp
+  uid: ff3f571e-97c9-11e8-9a19-0220bffb280e
+spec:
+  clusterIP: 172.30.246.58
+  ports:
+  - name: agent
+    port: 50000
+    protocol: TCP
+    targetPort: 50000
+  selector:
+    name: jenkins
+  sessionAffinity: None
+  type: ClusterIP
+status:
+  loadBalancer: {}

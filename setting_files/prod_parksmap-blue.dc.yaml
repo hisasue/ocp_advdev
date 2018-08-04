@@ -1,0 +1,116 @@
+apiVersion: apps.openshift.io/v1
+kind: DeploymentConfig
+metadata:
+  annotations:
+    openshift.io/generated-by: OpenShiftNewApp
+  creationTimestamp: 2018-08-04T09:38:08Z
+  generation: 9
+  labels:
+    app: parksmap-blue
+  name: parksmap-blue
+  namespace: 3890-parks-prod
+  resourceVersion: "29293904"
+  selfLink: /apis/apps.openshift.io/v1/namespaces/3890-parks-prod/deploymentconfigs/parksmap-blue
+  uid: 1865bded-97ca-11e8-9a19-0220bffb280e
+spec:
+  replicas: 1
+  revisionHistoryLimit: 10
+  selector:
+    app: parksmap-blue
+    deploymentconfig: parksmap-blue
+  strategy:
+    activeDeadlineSeconds: 21600
+    resources: {}
+    rollingParams:
+      intervalSeconds: 1
+      maxSurge: 25%
+      maxUnavailable: 25%
+      timeoutSeconds: 600
+      updatePeriodSeconds: 1
+    type: Rolling
+  template:
+    metadata:
+      annotations:
+        openshift.io/generated-by: OpenShiftNewApp
+      creationTimestamp: null
+      labels:
+        app: parksmap-blue
+        deploymentconfig: parksmap-blue
+    spec:
+      containers:
+      - env:
+        - name: APPNAME
+          value: ParksMap (Blue)
+        image: docker-registry.default.svc:5000/3890-parks-prod/parksmap:1.0
+        imagePullPolicy: IfNotPresent
+        livenessProbe:
+          exec:
+            command:
+            - echo
+            - ok
+          failureThreshold: 3
+          initialDelaySeconds: 60
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 1
+        name: parksmap-blue
+        readinessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /ws/healthz/
+            port: 8080
+            scheme: HTTP
+          initialDelaySeconds: 60
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 1
+        resources: {}
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+        volumeMounts:
+        - mountPath: /opt/eap/standalone/configuration/application-users.properties
+          name: jboss-config-blue
+          subPath: application-users.properties
+        - mountPath: /opt/eap/standalone/configuration/application-roles.properties
+          name: jboss-config1-blue
+          subPath: application-roles.properties
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      terminationGracePeriodSeconds: 30
+      volumes:
+      - configMap:
+          defaultMode: 420
+          name: parksmap-blue-config
+        name: jboss-config-blue
+      - configMap:
+          defaultMode: 420
+          name: parksmap-blue-config
+        name: jboss-config1-blue
+  test: false
+  triggers: []
+status:
+  availableReplicas: 1
+  conditions:
+  - lastTransitionTime: 2018-08-04T10:01:11Z
+    lastUpdateTime: 2018-08-04T10:01:11Z
+    message: Deployment config has minimum availability.
+    status: "True"
+    type: Available
+  - lastTransitionTime: 2018-08-04T10:01:12Z
+    lastUpdateTime: 2018-08-04T10:01:12Z
+    message: replication controller "parksmap-blue-1" successfully rolled out
+    reason: NewReplicationControllerAvailable
+    status: "True"
+    type: Progressing
+  details:
+    causes:
+    - type: Manual
+    message: manual change
+  latestVersion: 1
+  observedGeneration: 9
+  readyReplicas: 1
+  replicas: 1
+  unavailableReplicas: 0
+  updatedReplicas: 1

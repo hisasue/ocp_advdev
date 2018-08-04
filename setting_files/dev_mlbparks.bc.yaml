@@ -1,0 +1,43 @@
+apiVersion: build.openshift.io/v1
+kind: BuildConfig
+metadata:
+  annotations:
+    openshift.io/generated-by: OpenShiftNewBuild
+  creationTimestamp: 2018-08-04T09:37:32Z
+  labels:
+    build: mlbparks
+  name: mlbparks
+  namespace: 3890-parks-dev
+  resourceVersion: "29295320"
+  selfLink: /apis/build.openshift.io/v1/namespaces/3890-parks-dev/buildconfigs/mlbparks
+  uid: 033c55e5-97ca-11e8-9a19-0220bffb280e
+spec:
+  failedBuildsHistoryLimit: 5
+  nodeSelector: null
+  output:
+    to:
+      kind: ImageStreamTag
+      name: mlbparks:latest
+  postCommit: {}
+  resources: {}
+  runPolicy: Serial
+  source:
+    binary: {}
+    type: Binary
+  strategy:
+    sourceStrategy:
+      from:
+        kind: ImageStreamTag
+        name: jboss-eap70-openshift:1.7
+        namespace: openshift
+    type: Source
+  successfulBuildsHistoryLimit: 5
+  triggers:
+  - github:
+      secret: E9ZT-E22cGODB7TImwj3
+    type: GitHub
+  - generic:
+      secret: xheI_w1w9JszdrHy9-Cs
+    type: Generic
+status:
+  lastVersion: 2

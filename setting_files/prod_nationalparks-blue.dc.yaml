@@ -1,0 +1,128 @@
+apiVersion: apps.openshift.io/v1
+kind: DeploymentConfig
+metadata:
+  annotations:
+    openshift.io/generated-by: OpenShiftNewApp
+  creationTimestamp: 2018-08-04T09:37:52Z
+  generation: 9
+  labels:
+    app: nationalparks-blue
+  name: nationalparks-blue
+  namespace: 3890-parks-prod
+  resourceVersion: "29293041"
+  selfLink: /apis/apps.openshift.io/v1/namespaces/3890-parks-prod/deploymentconfigs/nationalparks-blue
+  uid: 0ef9297c-97ca-11e8-9a19-0220bffb280e
+spec:
+  replicas: 1
+  revisionHistoryLimit: 10
+  selector:
+    app: nationalparks-blue
+    deploymentconfig: nationalparks-blue
+  strategy:
+    activeDeadlineSeconds: 21600
+    resources: {}
+    rollingParams:
+      intervalSeconds: 1
+      maxSurge: 25%
+      maxUnavailable: 25%
+      timeoutSeconds: 600
+      updatePeriodSeconds: 1
+    type: Rolling
+  template:
+    metadata:
+      annotations:
+        openshift.io/generated-by: OpenShiftNewApp
+      creationTimestamp: null
+      labels:
+        app: nationalparks-blue
+        deploymentconfig: nationalparks-blue
+    spec:
+      containers:
+      - env:
+        - name: APPNAME
+          value: National Parks (Blue)
+        - name: DB_HOST
+          value: mongodb
+        - name: DB_PORT
+          value: "27017"
+        - name: DB_USERNAME
+          value: mongodb
+        - name: DB_PASSWORD
+          value: mongodb
+        - name: DB_NAME
+          value: parks
+        - name: DB_REPLICASET
+          value: rs0
+        image: docker-registry.default.svc:5000/3890-parks-prod/nationalparks:1.0
+        imagePullPolicy: IfNotPresent
+        livenessProbe:
+          exec:
+            command:
+            - echo
+            - ok
+          failureThreshold: 3
+          initialDelaySeconds: 60
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 1
+        name: nationalparks-blue
+        readinessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /ws/healthz/
+            port: 8080
+            scheme: HTTP
+          initialDelaySeconds: 60
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 1
+        resources: {}
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+        volumeMounts:
+        - mountPath: /opt/eap/standalone/configuration/application-users.properties
+          name: jboss-config-blue
+          subPath: application-users.properties
+        - mountPath: /opt/eap/standalone/configuration/application-roles.properties
+          name: jboss-config1-blue
+          subPath: application-roles.properties
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      terminationGracePeriodSeconds: 30
+      volumes:
+      - configMap:
+          defaultMode: 420
+          name: nationalparks-blue-config
+        name: jboss-config-blue
+      - configMap:
+          defaultMode: 420
+          name: nationalparks-blue-config
+        name: jboss-config1-blue
+  test: false
+  triggers: []
+status:
+  availableReplicas: 1
+  conditions:
+  - lastTransitionTime: 2018-08-04T09:59:38Z
+    lastUpdateTime: 2018-08-04T09:59:38Z
+    message: Deployment config has minimum availability.
+    status: "True"
+    type: Available
+  - lastTransitionTime: 2018-08-04T09:58:24Z
+    lastUpdateTime: 2018-08-04T09:59:40Z
+    message: replication controller "nationalparks-blue-1" successfully rolled out
+    reason: NewReplicationControllerAvailable
+    status: "True"
+    type: Progressing
+  details:
+    causes:
+    - type: Manual
+    message: manual change
+  latestVersion: 1
+  observedGeneration: 9
+  readyReplicas: 1
+  replicas: 1
+  unavailableReplicas: 0
+  updatedReplicas: 1

@@ -1,0 +1,24 @@
+apiVersion: v1
+kind: Service
+metadata:
+  creationTimestamp: 2018-08-04T10:08:24Z
+  labels:
+    type: parksmap-backend
+  name: nationalparks-green
+  namespace: 3890-parks-prod
+  resourceVersion: "29296849"
+  selfLink: /api/v1/namespaces/3890-parks-prod/services/nationalparks-green
+  uid: 52fdaad5-97ce-11e8-9a19-0220bffb280e
+spec:
+  clusterIP: 172.30.107.20
+  ports:
+  - port: 8080
+    protocol: TCP
+    targetPort: 8080
+  selector:
+    app: nationalparks-green
+    deploymentconfig: nationalparks-green
+  sessionAffinity: None
+  type: ClusterIP
+status:
+  loadBalancer: {}

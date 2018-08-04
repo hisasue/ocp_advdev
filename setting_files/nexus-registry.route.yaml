@@ -1,0 +1,33 @@
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  annotations:
+    openshift.io/host.generated: "true"
+  creationTimestamp: 2018-08-04T09:42:47Z
+  labels:
+    app: nexus3
+  name: nexus-registry
+  namespace: 3890-nexus
+  resourceVersion: "29285428"
+  selfLink: /apis/route.openshift.io/v1/namespaces/3890-nexus/routes/nexus-registry
+  uid: bf154231-97ca-11e8-9a19-0220bffb280e
+spec:
+  host: nexus-registry-3890-nexus.apps.na39.openshift.opentlc.com
+  port:
+    targetPort: 5000
+  tls:
+    termination: edge
+  to:
+    kind: Service
+    name: nexus-registry
+    weight: 100
+  wildcardPolicy: None
+status:
+  ingress:
+  - conditions:
+    - lastTransitionTime: 2018-08-04T09:42:47Z
+      status: "True"
+      type: Admitted
+    host: nexus-registry-3890-nexus.apps.na39.openshift.opentlc.com
+    routerName: router
+    wildcardPolicy: None

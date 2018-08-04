@@ -1,0 +1,96 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  creationTimestamp: 2018-08-04T09:37:27Z
+  generation: 1
+  labels:
+    name: mongodb
+  name: mongodb
+  namespace: 3890-parks-prod
+  resourceVersion: "29283933"
+  selfLink: /apis/apps/v1/namespaces/3890-parks-prod/statefulsets/mongodb
+  uid: 00339b51-97ca-11e8-9a19-0220bffb280e
+spec:
+  podManagementPolicy: OrderedReady
+  replicas: 3
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      name: mongodb
+  serviceName: mongodb-internal
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        name: mongodb
+    spec:
+      containers:
+      - args:
+        - run-mongod-replication
+        env:
+        - name: MONGODB_DATABASE
+          value: parks
+        - name: MONGODB_USER
+          value: mongodb
+        - name: MONGODB_PASSWORD
+          value: mongodb
+        - name: MONGODB_ADMIN_PASSWORD
+          value: mongodb_admin_password
+        - name: MONGODB_REPLICA_NAME
+          value: rs0
+        - name: MONGODB_KEYFILE_VALUE
+          value: "12345678901234567890"
+        - name: MONGODB_SERVICE_NAME
+          value: mongodb-internal
+        image: registry.access.redhat.com/rhscl/mongodb-34-rhel7:latest
+        imagePullPolicy: Always
+        name: mongo-container
+        ports:
+        - containerPort: 27017
+          protocol: TCP
+        readinessProbe:
+          exec:
+            command:
+            - stat
+            - /tmp/initialized
+          failureThreshold: 3
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 1
+        resources: {}
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+        volumeMounts:
+        - mountPath: /var/lib/mongodb/data
+          name: mongo-data
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      terminationGracePeriodSeconds: 30
+  updateStrategy:
+    rollingUpdate:
+      partition: 0
+    type: RollingUpdate
+  volumeClaimTemplates:
+  - metadata:
+      creationTimestamp: null
+      labels:
+        name: mongodb
+      name: mongo-data
+    spec:
+      accessModes:
+      - ReadWriteOnce
+      resources:
+        requests:
+          storage: 4Gi
+    status:
+      phase: Pending
+status:
+  collisionCount: 0
+  currentReplicas: 3
+  currentRevision: mongodb-545bd86b69
+  observedGeneration: 1
+  readyReplicas: 3
+  replicas: 3
+  updateRevision: mongodb-545bd86b69

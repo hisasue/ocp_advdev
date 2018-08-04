@@ -1,0 +1,37 @@
+apiVersion: build.openshift.io/v1
+kind: BuildConfig
+metadata:
+  creationTimestamp: 2018-08-04T09:37:33Z
+  labels:
+    name: parksmap-pipeline
+  name: parksmap-pipeline
+  namespace: 3890-jenkins
+  resourceVersion: "29294043"
+  selfLink: /apis/build.openshift.io/v1/namespaces/3890-jenkins/buildconfigs/parksmap-pipeline
+  uid: 035c0ca9-97ca-11e8-9a19-0220bffb280e
+spec:
+  nodeSelector: {}
+  output: {}
+  postCommit: {}
+  resources: {}
+  runPolicy: Serial
+  source:
+    contextDir: ParksMap
+    git:
+      ref: master
+      uri: https://github.com/hisasue/ocp_advdev.git
+    type: Git
+  strategy:
+    jenkinsPipelineStrategy:
+      env:
+      - name: GUID
+        value: "3890"
+      - name: CLUSTER
+        value: na39.openshift.opentlc.com
+      - name: REPO
+        value: https://github.com/hisasue/ocp_advdev
+      jenkinsfilePath: Jenkinsfile
+    type: JenkinsPipeline
+  triggers: []
+status:
+  lastVersion: 2

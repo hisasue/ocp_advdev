@@ -1,0 +1,133 @@
+apiVersion: apps.openshift.io/v1
+kind: DeploymentConfig
+metadata:
+  annotations:
+    openshift.io/generated-by: OpenShiftNewApp
+  creationTimestamp: 2018-08-04T09:37:28Z
+  generation: 9
+  labels:
+    app: sonarqube
+  name: sonarqube
+  namespace: 3890-sonarqube
+  resourceVersion: "29284067"
+  selfLink: /apis/apps.openshift.io/v1/namespaces/3890-sonarqube/deploymentconfigs/sonarqube
+  uid: 007f21ff-97ca-11e8-9a19-0220bffb280e
+spec:
+  replicas: 1
+  revisionHistoryLimit: 10
+  selector:
+    app: sonarqube
+    deploymentconfig: sonarqube
+  strategy:
+    activeDeadlineSeconds: 21600
+    recreateParams:
+      timeoutSeconds: 600
+    resources: {}
+    rollingParams:
+      intervalSeconds: 1
+      maxSurge: 25%
+      maxUnavailable: 25%
+      timeoutSeconds: 600
+      updatePeriodSeconds: 1
+    type: Recreate
+  template:
+    metadata:
+      annotations:
+        openshift.io/generated-by: OpenShiftNewApp
+      creationTimestamp: null
+      labels:
+        app: sonarqube
+        deploymentconfig: sonarqube
+    spec:
+      containers:
+      - env:
+        - name: SONARQUBE_JDBC_PASSWORD
+          value: sonar
+        - name: SONARQUBE_JDBC_URL
+          value: jdbc:postgresql://postgresql/sonar
+        - name: SONARQUBE_JDBC_USERNAME
+          value: sonar
+        image: wkulhanek/sonarqube@sha256:8881232a1cd5636768df366eb8803255276618bf6252b01516c0a70bcaaf4943
+        imagePullPolicy: IfNotPresent
+        livenessProbe:
+          exec:
+            command:
+            - echo
+            - ok
+          failureThreshold: 3
+          initialDelaySeconds: 40
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 1
+        name: sonarqube
+        ports:
+        - containerPort: 9000
+          protocol: TCP
+        readinessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /about
+            port: 9000
+            scheme: HTTP
+          initialDelaySeconds: 20
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 1
+        resources:
+          limits:
+            cpu: "2"
+            memory: 3Gi
+          requests:
+            cpu: "1"
+            memory: 2Gi
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+        volumeMounts:
+        - mountPath: /opt/sonarqube/data
+          name: sonarqube-volume-1
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      terminationGracePeriodSeconds: 30
+      volumes:
+      - name: sonarqube-volume-1
+        persistentVolumeClaim:
+          claimName: sonarqube-pvc
+  test: false
+  triggers:
+  - type: ConfigChange
+  - imageChangeParams:
+      automatic: true
+      containerNames:
+      - sonarqube
+      from:
+        kind: ImageStreamTag
+        name: sonarqube:6.7.4
+        namespace: 3890-sonarqube
+      lastTriggeredImage: wkulhanek/sonarqube@sha256:8881232a1cd5636768df366eb8803255276618bf6252b01516c0a70bcaaf4943
+    type: ImageChange
+status:
+  availableReplicas: 1
+  conditions:
+  - lastTransitionTime: 2018-08-04T09:38:40Z
+    lastUpdateTime: 2018-08-04T09:38:40Z
+    message: Deployment config has minimum availability.
+    status: "True"
+    type: Available
+  - lastTransitionTime: 2018-08-04T09:37:57Z
+    lastUpdateTime: 2018-08-04T09:38:41Z
+    message: replication controller "sonarqube-2" successfully rolled out
+    reason: NewReplicationControllerAvailable
+    status: "True"
+    type: Progressing
+  details:
+    causes:
+    - type: ConfigChange
+    message: config change
+  latestVersion: 2
+  observedGeneration: 9
+  readyReplicas: 1
+  replicas: 1
+  unavailableReplicas: 0
+  updatedReplicas: 1

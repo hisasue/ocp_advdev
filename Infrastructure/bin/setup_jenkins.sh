@@ -59,4 +59,4 @@ oc process -f ./Infrastructure/templates/bc-app.yaml \
  
 ./Infrastructure/bin/waitUntilPodReady.sh jenkins ${GUID}-jenkins
 
-sleep 480
+sleep 400

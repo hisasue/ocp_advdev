@@ -124,6 +124,7 @@ oc set volume dc/mlbparks-blue  --add --name=jboss-config1-blue --mount-path=/op
 oc new-build --binary=true --name="nationalparks" redhat-openjdk18-openshift:1.2 -n ${GUID}-parks-prod && \
 oc new-app ${GUID}-parks-prod/nationalparks:0.0-0 --name=nationalparks-green --allow-missing-imagestream-tags=true -n ${GUID}-parks-prod && \
 oc new-app ${GUID}-parks-prod/nationalparks:0.0-0 --name=nationalparks-blue  --allow-missing-imagestream-tags=true -n ${GUID}-parks-prod
+oc set triggers dc/nationalparks-green --remove-all -n ${GUID}-parks-prod && \
 oc set triggers dc/nationalparks-blue  --remove-all -n ${GUID}-parks-prod && \
 oc expose dc nationalparks-green --port 8080 -l type=parksmap-backend -n ${GUID}-parks-prod && \
 #oc expose dc nationalparks-blue  --port 8080 -n ${GUID}-parks-prod && \

@@ -30,7 +30,7 @@ echo "Setting up Jenkins in project ${GUID}-jenkins from Git Repo ${REPO} for Cl
 oc policy add-role-to-user admin system:serviceaccount:gpte-jenkins:jenkins -n ${GUID}-jenkins
 #oc new-app jenkins-persistent --param ENABLE_OAUTH=true --param MEMORY_LIMIT=2Gi --param VOLUME_CAPACITY=4Gi -e GUID=${GUID} -e REPO=${REPO} -e CLUSTER=${CLUSTER} -n ${GUID}-jenkins
 oc new-app jenkins-persistent --param ENABLE_OAUTH=true --param VOLUME_CAPACITY=4Gi -e GUID=${GUID} -e REPO=${REPO} -e CLUSTER=${CLUSTER} -n ${GUID}-jenkins
-oc set resources dc/jenkins --limits=memory=4Gi,cpu=2 --requests=memory=4Gi,cpu=2 -n ${GUID}-jenkins
+oc set resources dc/jenkins --limits=memory=3Gi,cpu=1.5 --requests=memory=3Gi,cpu=1.5 -n ${GUID}-jenkins
 #yum install -y docker
 #cd $DIR/../templates/jenkins-slave-appdev/
 #oc new-build --name=jenkins-slave-maven-centos --dockerfile=$'FROM docker.io/openshift/jenkins-slave-maven-centos7:v3.9\nUSER root\nRUN yum -y install skopeo apb && yum clean all\nUSER 1001' -n ${GUID}-jenkins && \
